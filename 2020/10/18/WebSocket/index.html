@@ -1,0 +1,166 @@
+<!DOCTYPE html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="WebSocket"><meta name="author" content="John Doe"><meta name="keywords" content=""><meta name="copyright" content="copyright.liscense_type"><title>WebSocket</title><!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]><script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script><script src="https://cdn.bootcss.com/respond/1.4.2/respond.min.js"></script><![endif]--><link rel="icon" href="/compass/imgs/favicon.ico"><link rel="stylesheet" href="/compass/stylesheets/font-awesome.min.css"><script>var algoliaConfig = {"on":false}</script><link rel="stylesheet" href="/compass/stylesheets/screen.css"></head><body><div id="body-inner-wrapper"><header id="page-header"><nav id="nav"><div id="site-name">Prime</div><i class="fa fa-bars fa-2x" id="nav-icon" aria-hidden="true"></i><div id="nav-expanded"><a class="nav-word-item" href="/">Home</a><a class="nav-word-item" href="/archives">Archives</a><a class="nav-word-item" href="/tags">Tags</a><a class="nav-word-item" href="/categories">Catogories</a></div><div id="nav-list"><ul><li><a class="nav-list-item" href="/">Home</a></li><li><a class="nav-list-item" href="/archives">Archives</a></li><li><a class="nav-list-item" href="/tags">Tags</a></li><li><a class="nav-list-item" href="/categories">Catogories</a></li></ul></div></nav><div id="banner-wrapper"><div id="banner-pagetype-dependent-info"><h1 id="post-title">WebSocket</h1><span id="post-description"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-10-18</span><span id="word-count">The total word count - 2148</span><span id="time-count">Estimated time of reading - 8 mins</span></div></div><a title="Back to Top"><i class="fa fa-arrow-up" id="to-Top" aria-hidden="true"></i></a><a title="Click to Toggle off"><i class="fa fa-toggle-on" id="toggle-on-Toc" aria-hidden="true"></i></a><a title="Click to Toggle on"><i class="fa fa-toggle-off" id="toggle-off-Toc" aria-hidden="true"></i></a></header><aside id="toc-column"><div id="toc-column-inner-wrapper"><div id="post-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、什么是WebSocket"><span class="toc-text">1、什么是WebSocket?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1、定义"><span class="toc-text">1.1、定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2、关联和区别"><span class="toc-text">1.2、关联和区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1、HTTP"><span class="toc-text">1.2.1、HTTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2、socket"><span class="toc-text">1.2.2、socket</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3、应用场景"><span class="toc-text">1.3、应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-1、Websocket握手"><span class="toc-text">1.3.1、Websocket握手</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、关于Websocket"><span class="toc-text">2、关于Websocket</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1、WebSocket心跳"><span class="toc-text">2.1、WebSocket心跳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2、WebSocket状态"><span class="toc-text">2.2、WebSocket状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3、WebSocket实践"><span class="toc-text">2.3、WebSocket实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1、服务端接收发送消息"><span class="toc-text">2.3.1、服务端接收发送消息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2、客户端接收发送消息"><span class="toc-text">2.3.2、客户端接收发送消息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-3、服务端定时发送"><span class="toc-text">2.3.3、服务端定时发送</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-4、多人聊天"><span class="toc-text">2.3.4、多人聊天</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、总结-🥇"><span class="toc-text">3、总结 🥇</span></a></li></ol></div></div></aside><main id="main-content-column"><div id="main-content-wrapper"><div id="post-full-content"><h1 id="1、什么是WebSocket"><a href="#1、什么是WebSocket" class="headerlink" title="1、什么是WebSocket?"></a>1、什么是WebSocket?</h1><h2 id="1-1、定义"><a href="#1-1、定义" class="headerlink" title="1.1、定义"></a>1.1、定义</h2><p>Websocket是一个持久化的网络通信协议，可以在单个 TCP 连接上进行全双工通讯，没有了Request和Response的概念，两者地位完全平等，连接一旦建立，客户端和服务端之间实时可以进行双向数据传输。</p>
+<h2 id="1-2、关联和区别"><a href="#1-2、关联和区别" class="headerlink" title="1.2、关联和区别"></a>1.2、关联和区别</h2><h3 id="1-2-1、HTTP"><a href="#1-2-1、HTTP" class="headerlink" title="1.2.1、HTTP"></a>1.2.1、HTTP</h3><ol>
+<li>HTTP是非持久的协议，客户端想知道服务端的处理进度只能通过不停地使用 Ajax进行轮询或者采用 long poll 的方式来，但是前者对服务器压力大，后者则会因为一直等待Response造成阻塞。</li>
+<li>虽然http1.1默认开启了keep-alive长连接保持了这个TCP通道使得在一个HTTP连接中，可以发送多个Request，接收多个Response，但是一个request只能有一个response。而且这个response也是被动的，不能主动发起。</li>
+<li>websocket虽然是独立于HTTP的一种协议，但是websocket必须依赖 HTTP 协议进行一次握手(在握手阶段是一样的)，握手成功后，数据就直接从 TCP通道传输，与 HTTP 无关了，可以用一张图理解两者有交集，但是并不是全部。</li>
+</ol>
+<h3 id="1-2-2、socket"><a href="#1-2-2、socket" class="headerlink" title="1.2.2、socket"></a>1.2.2、socket</h3><ol>
+<li>socket也被称为套接字，与HTTP和WebSocket不一样，socket不是协议，它是在程序层面上对传输层协议（可以主要理解为TCP/IP）的接口封装。可以理解为一个能够提供端对端的通信的调用接口（API）</li>
+<li>对于程序员而言，其需要在 A 端创建一个 socket 实例，并为这个实例提供其所要连接的 B 端的 IP 地址和端口号，而在 B 端创建另一个 socket 实例，并且绑定本地端口号来进行监听。当 A 和 B 建立连接后，双方就建立了一个端对端的 TCP 连接，从而可以进行双向通信。WebSocekt借鉴了 socket 的思想，为 client 和 server 之间提供了类似的双向通信机制。</li>
+</ol>
+<h2 id="1-3、应用场景"><a href="#1-3、应用场景" class="headerlink" title="1.3、应用场景"></a>1.3、应用场景</h2><p>WebSocket可以做弹幕、消息订阅、多玩家游戏、协同编辑、股票基金实时报价、视频会议、在线教育、聊天室等应用实时监听服务端变化。</p>
+<h3 id="1-3-1、Websocket握手"><a href="#1-3-1、Websocket握手" class="headerlink" title="1.3.1、Websocket握手"></a>1.3.1、Websocket握手</h3><pre><code>// Websocket握手请求报文 ☟ ☟ ☟
+
+GET /chat HTTP/1.1
+Host: server.example.com
+Upgrade:websocket
+Connection: Upgrade
+Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
+Sec-WebSocket-Protocol: chat, superchat
+Sec-WebSocket-Version: 13
+Origin: http://example.com</code></pre><p>下面是与传统 HTTP 报文不同的地方：</p>
+<pre><code>Upgrade: websocket
+Connection: Upgrade</code></pre><p>表示发起的是 WebSocket 协议</p>
+<pre><code>Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
+Sec-WebSocket-Protocol: chat, superchat
+Sec-WebSocket-Version: 13</code></pre><p>Sec-WebSocket-Key 是由浏览器随机生成的，验证是否可以进行Websocket通信，防止恶意或者无意的连接。</p>
+<p>Sec_WebSocket-Protocol 是用户自定义的字符串，用来标识服务所需要的协议</p>
+<p>Sec-WebSocket-Version 表示支持的 WebSocket 版本。</p>
+<pre><code>// 服务器响应：☟ ☟ ☟
+
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=
+Sec-WebSocket-Protocol: chat</code></pre><p>101 响应码 表示要转换协议。</p>
+<p>Connection: Upgrade 表示升级新协议请求。</p>
+<p>Upgrade: websocket 表示升级为 WebSocket 协议。</p>
+<p>Sec-WebSocket-Accept 是经过服务器确认，并且加密过后的</p>
+<p>Sec-WebSocket-Key 用来证明客户端和服务器之间能进行通信了。</p>
+<p>Sec-WebSocket-Protocol 表示最终使用的协议。</p>
+<p>至此，客户端和服务器握手成功建立了Websocket连接，HTTP已经完成它所有工作了，接下来就是完全按照Websocket协议进行通信了。</p>
+<hr>
+<h1 id="2、关于Websocket"><a href="#2、关于Websocket" class="headerlink" title="2、关于Websocket"></a>2、关于Websocket</h1><h2 id="2-1、WebSocket心跳"><a href="#2-1、WebSocket心跳" class="headerlink" title="2.1、WebSocket心跳"></a>2.1、WebSocket心跳</h2><p>可能会有一些未知情况导致SOCKET断开，而客户端和服务端却不知道，需要客户端定时发送一个心跳 Ping 让服务端知道自己在线，而服务端也要回复一个心跳 Pong告诉客户端自己可用，否则视为断开。</p>
+<h2 id="2-2、WebSocket状态"><a href="#2-2、WebSocket状态" class="headerlink" title="2.2、WebSocket状态"></a>2.2、WebSocket状态</h2><p>WebSocket 对象中的readyState属性有四种状态：</p>
+<ul>
+<li>0: 表示正在连接</li>
+<li>1: 表示连接成功，可以通信了</li>
+<li>2: 表示连接正在关闭</li>
+<li>3: 表示连接已经关闭，或者打开连接失败<h2 id="2-3、WebSocket实践"><a href="#2-3、WebSocket实践" class="headerlink" title="2.3、WebSocket实践"></a>2.3、WebSocket实践</h2><h3 id="2-3-1、服务端接收发送消息"><a href="#2-3-1、服务端接收发送消息" class="headerlink" title="2.3.1、服务端接收发送消息"></a>2.3.1、服务端接收发送消息</h3>WebSocket的服务端部分，本文会以Node.js搭建。</li>
+</ul>
+<p>安装express和负责处理WebSocket协议的ws：<br>    npm install express ws<br>安装成功后生成package.json文件</p>
+<p>接着在根目录创建server.js文件:</p>
+<pre><code>// 引入express 和 ws
+const express = require(&apos;express&apos;);
+const SocketServer = require(&apos;ws&apos;).Server;
+
+// 指定开启的端口号const PORT = 3000;
+// 创建express，绑定监听3000端口，且设定开启后在consol中提示
+const server = express().listen(PORT, () =&gt; console.log(`Listening on ${PORT}`));
+
+// 将express交给SocketServer开启WebSocket的服务
+const wss = new SocketServer({ server });
+
+// 当 WebSocket 从外部连接时执行
+wss.on(&apos;connection&apos;, (ws) =&gt; {
+
+    // 连接时执行此 console 提示 console.log(&apos;Client connected&apos;);
+    // 对message设置监听，接收从客户端发送的消息 
+    ws.on(&apos;message&apos;, (data) =&gt; {
+
+        // data为客户端发送的消息，将消息原封不动返回回去
+        ws.send(data);
+    });
+
+    // 当WebSocket的连接关闭时执行
+    ws.on(&apos;close&apos;, () =&gt; {
+        console.log(&apos;Closeconnected&apos;);
+    });
+});</code></pre><p>执行node server.js启动服务，端口打开后会执行监听时间打印提示，说明服务启动成功。</p>
+<p>在开启WebSocket后，服务端会在message中监听，接收参数data捕获客户端发送的消息，然后使用send发送消息。</p>
+<h3 id="2-3-2、客户端接收发送消息"><a href="#2-3-2、客户端接收发送消息" class="headerlink" title="2.3.2、客户端接收发送消息"></a>2.3.2、客户端接收发送消息</h3><p>分别在根目录创建index.html和index.js文件</p>
+<pre><code>// index.html
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;script src=&quot;./index.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+// index.js
+// 使用WebSocket的地址向服务端开启连接
+let ws = new WebSocket(&apos;ws://localhost:3000&apos;);
+
+// 开启后的动作，指定在连接后执行的事件
+ws.onopen = () =&gt; {
+    console.log(&apos;open connection&apos;);
+};
+
+// 接收服务端发送的消息
+ws.onmessage = (event) =&gt; {
+    console.log(event);
+};
+
+// 指定在关闭后执行的事件
+ws.onclose = () =&gt; {
+    console.log(&apos;close connection&apos;);
+};</code></pre><p>上面的url就是本机node开启的服务地址，分别指定连接 （onopen），关闭 （onclose） 和消息接收 （onmessage） 的执行事件，访问html，打印ws信息。</p>
+<p>打印了open connection说明连接成功，客户端会使用onmessage处理接收。<br>其中event参数包含这次沟通的详细信息，从服务端回传的消息会在event的data属性中。<br>手动在控制台调用send发送消息，打印event回传信息</p>
+<h3 id="2-3-3、服务端定时发送"><a href="#2-3-3、服务端定时发送" class="headerlink" title="2.3.3、服务端定时发送"></a>2.3.3、服务端定时发送</h3><p>上面是从客户端发送消息，服务端回传。我们也可以通过setInterval让服务端在固定时间发送消息给客户端:<br>    // server.js修改如下:</p>
+<pre><code>// 当WebSocket从外部连接时执行
+wss.on(&apos;connection&apos;, (ws) =&gt; {
+
+    // 连接时执行此 console 提示
+    console.log(&apos;Client connected&apos;);
+
+    // 固定发送最新消息给客户端
+    const  sendNowTime = setInterval(() =&gt; {
+        ws.send(String(new Date()));
+    }, 1000);
+
+    // 对message设置监听，接收从客户端发送的消息
+    ws.on(&apos;message&apos;, (data) =&gt; {
+
+        // data为客户端发送的消息，将消息原封不动返回回去
+        ws.send(data);
+    });
+
+    // 当WebSocket的连接关闭时执行
+    ws.on(&apos;close&apos;,() =&gt; {
+        console.log(&apos;Close connected&apos;);
+    });
+});</code></pre><p>客户端连接后就会定时接收，直至我们关闭websocket服务。</p>
+<h3 id="2-3-4、多人聊天"><a href="#2-3-4、多人聊天" class="headerlink" title="2.3.4、多人聊天"></a>2.3.4、多人聊天</h3><p>如果多个客户端连接按照上面的方式只会返回各自发送的消息，先注释服务端定时发送，开启两个窗口模拟：</p>
+<p>如果我们要让客户端间消息共享，也同时接收到服务端回传的消息呢？</p>
+<p>我们可以使用clients找出当前所有连接中的客户端 ，并通过回传消息发送到每一个客户端中：</p>
+<p>修改server.js如下:</p>
+<pre><code>//当WebSocket从外部连接时执行
+wss.on(&apos;connection&apos;, (ws) =&gt; {
+
+    //连接时执行此 console 提示
+    console.log(&apos;Client connected&apos;);
+
+    //固定发送最新消息给客户端
+    const sendNowTime = setInterval(() =&gt; {
+        ws.send(String(new Date()));
+    }, 1000);
+
+    //对message设置监听，接收从客户端发送的消息
+    ws.on(&apos;message&apos;, (data) =&gt; {
+
+        //取得所有连接中的 客户端
+        let clients = wss.clients;
+
+        //循环，发送消息至每个客户端
+        clients.forEach((client) =&gt; {
+            client.send(data);
+        });
+    });
+
+    //当WebSocket的连接关闭时执行
+    ws.on(&apos;close&apos;, () =&gt; {
+        console.log(&apos;Close connected&apos;);
+    });
+});</code></pre><p>这样一来，不论在哪个客户端发送消息，服务端都能将消息回传到每个客户端</p>
+<h1 id="3、总结-🥇"><a href="#3、总结-🥇" class="headerlink" title="3、总结 🥇"></a>3、总结 🥇</h1><p>纸上得来终觉浅，绝知此事要躬行，理论需配合实例进行消化，搭好服务端可以好好玩耍一波！</p>
+</div></div></main><div id="pagination-wrapper"><a id="page-next" href="/2020/09/30/Notes/">Notes <i class="fa fa-chevron-right"></i></a></div><footer id="page-footer"><div id="footer-wrapper"><div id="blog-meta">&copy;2017-2020 By John Doe | Theme - <a id='theme-name' href="https://github.com/huan555/lemon-lime" target="_blank" rel="noopener"> Lemon-Lime</a> | Power By <a id='theme-powered-by' href=http://hexo.io> Hexo</a></div><div id="viewed-record"><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-eye" aria-hidden="true"></i> <span id="busuanzi_value_page_pv"></span></span></div><div id="copyright-wrapper"><i class="fa fa-cc" aria-hidden="true"></i><div id="copyright">Except where otherwise noted, content on this blog is licensed under <a rel="license" href=http://creativecommons.org/licenses/by-nc-sa/4.0/>CC BY-NC-SA 4.0</a>.</div></div><div id="contact-me"><div id="rss"><a href="/atom.xml" type="application/atom+xml" rel="alternate" target="_blank"><i class="fa fa-rss" aria-hidden="true"></i></a></div><div id="email"><a href="mailto:1466315053@?Subject=blog"><i class="fa fa-envelope" aria-hidden="true"></i></a></div><span id="github"><a href="https://github.com/prime234" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i></a></span></div></div></footer><script src="/compass/js/blog.js"></script></div></body>
