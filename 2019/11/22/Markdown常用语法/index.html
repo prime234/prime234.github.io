@@ -1,0 +1,66 @@
+<!DOCTYPE html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Markdown常用语法"><meta name="author" content="John Doe"><meta name="keywords" content=""><meta name="copyright" content="copyright.liscense_type"><title>Markdown常用语法</title><!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]><script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script><script src="https://cdn.bootcss.com/respond/1.4.2/respond.min.js"></script><![endif]--><link rel="icon" href="/compass/imgs/favicon.ico"><link rel="stylesheet" href="/compass/stylesheets/font-awesome.min.css"><script>var algoliaConfig = {"on":false}</script><link rel="stylesheet" href="/compass/stylesheets/screen.css"></head><body><div id="body-inner-wrapper"><header id="page-header"><nav id="nav"><div id="site-name">Prime</div><i class="fa fa-bars fa-2x" id="nav-icon" aria-hidden="true"></i><div id="nav-expanded"><a class="nav-word-item" href="/">Home</a><a class="nav-word-item" href="/archives">Archives</a><a class="nav-word-item" href="/tags">Tags</a><a class="nav-word-item" href="/categories">Catogories</a></div><div id="nav-list"><ul><li><a class="nav-list-item" href="/">Home</a></li><li><a class="nav-list-item" href="/archives">Archives</a></li><li><a class="nav-list-item" href="/tags">Tags</a></li><li><a class="nav-list-item" href="/categories">Catogories</a></li></ul></div></nav><div id="banner-wrapper"><div id="banner-pagetype-dependent-info"><h1 id="post-title">Markdown常用语法</h1><span id="post-description"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-11-22</span><span id="word-count">The total word count - 703</span><span id="time-count">Estimated time of reading - 3 mins</span></div></div><a title="Back to Top"><i class="fa fa-arrow-up" id="to-Top" aria-hidden="true"></i></a><a title="Click to Toggle off"><i class="fa fa-toggle-on" id="toggle-on-Toc" aria-hidden="true"></i></a><a title="Click to Toggle on"><i class="fa fa-toggle-off" id="toggle-off-Toc" aria-hidden="true"></i></a></header><aside id="toc-column"><div id="toc-column-inner-wrapper"><div id="post-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#推荐的编辑器"><span class="toc-text">推荐的编辑器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-支持6个级别的标题大小"><span class="toc-text">1. 支持6个级别的标题大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-字体"><span class="toc-text">2. 字体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-引用"><span class="toc-text">3. 引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-列表"><span class="toc-text">4. 列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-图片"><span class="toc-text">5. 图片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-链接"><span class="toc-text">6. 链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-表格"><span class="toc-text">7. 表格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-代码块"><span class="toc-text">8. 代码块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-公式"><span class="toc-text">9. 公式</span></a></li></ol></li></ol></div></div></aside><main id="main-content-column"><div id="main-content-wrapper"><div id="post-full-content"><h2 id="推荐的编辑器"><a href="#推荐的编辑器" class="headerlink" title="推荐的编辑器"></a>推荐的编辑器</h2><ul>
+<li><p>VSCode (下载插件就行，强推)</p>
+</li>
+<li><p>MarkdownPad 2(windows)</p>
+</li>
+<li><p>Typora</p>
+<h3 id="1-支持6个级别的标题大小"><a href="#1-支持6个级别的标题大小" class="headerlink" title="1. 支持6个级别的标题大小"></a>1. 支持6个级别的标题大小</h3><pre><code>#### 四级标题
+##### 五级标题
+###### 六级标题</code></pre><h3 id="2-字体"><a href="#2-字体" class="headerlink" title="2. 字体"></a>2. 字体</h3><pre><code>**这里想加粗**
+*这里想用斜体*
+***这里加粗斜体***
+&lt;u&gt;这里想用下划线&lt;/u&gt;
+~~这里想用删除线~~</code></pre><p>效果：<br><br><strong>这里想加粗</strong><br><br>  <em>这里想用斜体</em><br><br>  <strong><em>这里加粗斜体</em></strong><br><br>  <u>这里想用下划线</u><br><br>  <del>这里想用删除线</del><br><br>  注：如果在段落中想给文字换颜色，换字体字号或居中，使用内嵌HTML的方法实现</p>
+</li>
+</ul>
+<h3 id="3-引用"><a href="#3-引用" class="headerlink" title="3. 引用"></a>3. 引用</h3><p>文字前加”&gt;”</p>
+<pre><code>&gt;这里想引用</code></pre><h3 id="4-列表"><a href="#4-列表" class="headerlink" title="4. 列表"></a>4. 列表</h3><ul>
+<li>分有序列表、无序列表还可以进行列表嵌套（开头加空格）</li>
+<li>有序列表是数字后加”.”和空格，无序列表在文字前加”-/+/*”的任何一个和空格。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 这里是有序列表</span><br><span class="line">- 这里是无序列表1</span><br><span class="line">+ 这里是无序列表2</span><br><span class="line">* 这里是无序列表3</span><br><span class="line">2. 这里是一级有序列表  </span><br><span class="line">    - 这里是二级无序列表（开头打两个空格）</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>效果：</p>
+<ol>
+<li>这里是有序列表</li>
+</ol>
+<ul>
+<li>这里是无序列表1</li>
+</ul>
+<ul>
+<li>这里是无序列表2</li>
+</ul>
+<ul>
+<li>这里是无序列表3</li>
+</ul>
+<ol start="2">
+<li>这里是一级有序列表  <ul>
+<li>这里是二级无序列表（开头打两个空格）<h3 id="5-图片"><a href="#5-图片" class="headerlink" title="5. 图片"></a>5. 图片</h3><img src="/.com//%E5%9B%BE%E7%89%87%E5%9C%B0%E5%9D%80%22%E5%9B%BE%E7%89%87title%22" alt="图片名称"><br>eg:<img src="https://cdn.jsdelivr.net/gh/filess/images/2020/09/15/1600182194652-667dc0f5-5984-4f14-a4c9-38e80e91a6ad.jpg" alt="img"><br>效果：<br><img src="https://cdn.jsdelivr.net/gh/filess/images/2020/09/15/1600182194652-667dc0f5-5984-4f14-a4c9-38e80e91a6ad.jpg" alt="img" title="飞"></li>
+</ul>
+</li>
+</ol>
+<h3 id="6-链接"><a href="#6-链接" class="headerlink" title="6. 链接"></a>6. 链接</h3><pre><code>eg:
+[百度](http://baidu.com&quot;baidu&quot;)</code></pre><p>效果： <a href="http://baidu.com" target="_blank" rel="noopener" title="baidu">百度</a></p>
+<h3 id="7-表格"><a href="#7-表格" class="headerlink" title="7. 表格"></a>7. 表格</h3><ul>
+<li><p>表格按照格式，列与列之间用“|”分割，表头和内容之间的分割线要加3个以上的“-”</p>
+<pre><code>第一列表头|第二列表头|第三类表头
+---|:--:|---:
+第一列|第二例|第三列
+
+（第二行分割，默认文字居左；两边加&quot;:&quot;,让文字居中;右边加&quot;:&quot;,让文字居右。）</code></pre><p>效果：<br>第一列表头|第二列表头|第三类表头</p>
+</li>
+</ul>
+<p>–|:–:|—:<br>第一列|第二例|第三列</p>
+<h3 id="8-代码块"><a href="#8-代码块" class="headerlink" title="8. 代码块"></a>8. 代码块</h3><ul>
+<li>代码块前后用三个反引号”`”包起来</li>
+</ul>
+<pre><code>想引用一下`Java`和`python`
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">想写多行代码</span><br><span class="line">int a = 0;</span><br><span class="line">完成</span><br></pre></td></tr></table></figure></code></pre><p>效果：</p>
+<p>想引用一下<code>Java</code>和<code>python</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">想写多行代码</span><br><span class="line">int a = 0;</span><br><span class="line">完成</span><br></pre></td></tr></table></figure>
+<h3 id="9-公式"><a href="#9-公式" class="headerlink" title="9. 公式"></a>9. 公式</h3><ul>
+<li>和LaTeX语法相似，单行公式前后用符号“$$”,行内公式前后用“$”<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$$x=abc$$</span><br><span class="line">$x = \dfrac&#123;-b \pm \sqrt&#123;b^2 - 4ac&#125;&#125;&#123;2a&#125;$ </span><br><span class="line">$[\frac&#123;1&#125;&#123;\Bigl(\sqrt&#123;\phi \sqrt&#123;5&#125;&#125;-\phi\Bigr) e^&#123;\frac25 \pi&#125;&#125; = 1+\frac&#123;e^&#123;-2\pi&#125;&#125; &#123;1+\frac&#123;e^&#123;-4\pi&#125;&#125; &#123;1+\frac&#123;e^&#123;-6\pi&#125;&#125; &#123;1+\frac&#123;e^&#123;-8\pi&#125;&#125; &#123;1+\ldots&#125; &#125; &#125; &#125;]$</span><br></pre></td></tr></table></figure>
+效果：<br>$$x=abc$$<br>$x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a}$<br>$[\frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} = 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\ldots} } } }]$</li>
+</ul>
+</div></div></main><div id="pagination-wrapper"><a id="page-prev" href="/2019/12/30/machine-learning/"><i class="fa fa-chevron-left"></i> Machine Learning</a><a id="page-next" href="/2019/11/11/%E7%94%A8git%E5%B0%86%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E5%88%B0GitHub/">用git将项目上传到GitHub <i class="fa fa-chevron-right"></i></a></div><footer id="page-footer"><div id="footer-wrapper"><div id="blog-meta">&copy;2017-2020 By John Doe | Theme - <a id='theme-name' href="https://github.com/huan555/lemon-lime" target="_blank" rel="noopener"> Lemon-Lime</a> | Power By <a id='theme-powered-by' href=http://hexo.io> Hexo</a></div><div id="viewed-record"><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-eye" aria-hidden="true"></i> <span id="busuanzi_value_page_pv"></span></span></div><div id="copyright-wrapper"><i class="fa fa-cc" aria-hidden="true"></i><div id="copyright">Except where otherwise noted, content on this blog is licensed under <a rel="license" href=http://creativecommons.org/licenses/by-nc-sa/4.0/>CC BY-NC-SA 4.0</a>.</div></div><div id="contact-me"><div id="rss"><a href="/atom.xml" type="application/atom+xml" rel="alternate" target="_blank"><i class="fa fa-rss" aria-hidden="true"></i></a></div><div id="email"><a href="mailto:1466315053@?Subject=blog"><i class="fa fa-envelope" aria-hidden="true"></i></a></div><span id="github"><a href="https://github.com/prime234" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i></a></span></div></div></footer><script src="/compass/js/blog.js"></script></div></body>
