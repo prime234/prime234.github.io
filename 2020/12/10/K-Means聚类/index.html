@@ -1,0 +1,80 @@
+<!DOCTYPE html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="K-Means聚类"><meta name="author" content="John Doe"><meta name="keywords" content="数据挖掘"><meta name="copyright" content="copyright.liscense_type"><title>K-Means聚类</title><!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]><script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script><script src="https://cdn.bootcss.com/respond/1.4.2/respond.min.js"></script><![endif]--><link rel="icon" href="/compass/imgs/favicon.ico"><link rel="stylesheet" href="/compass/stylesheets/font-awesome.min.css"><script>var algoliaConfig = {"on":false}</script><link rel="stylesheet" href="/compass/stylesheets/screen.css"></head><body><div id="body-inner-wrapper"><header id="page-header"><nav id="nav"><div id="site-name">Prime'Blog</div><i class="fa fa-bars fa-2x" id="nav-icon" aria-hidden="true"></i><div id="nav-expanded"><a class="nav-word-item" href="/">Home</a><a class="nav-word-item" href="/archives">Archives</a><a class="nav-word-item" href="/tags">Tags</a><a class="nav-word-item" href="/categories">Catogories</a></div><div id="nav-list"><ul><li><a class="nav-list-item" href="/">Home</a></li><li><a class="nav-list-item" href="/archives">Archives</a></li><li><a class="nav-list-item" href="/tags">Tags</a></li><li><a class="nav-list-item" href="/categories">Catogories</a></li></ul></div></nav><div id="banner-wrapper"><div id="banner-pagetype-dependent-info"><h1 id="post-title">K-Means聚类</h1><span id="post-description"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-10</span><span id="word-count">The total word count - 1584</span><span id="time-count">Estimated time of reading - 6 mins</span></div></div><a title="Back to Top"><i class="fa fa-arrow-up" id="to-Top" aria-hidden="true"></i></a><a title="Click to Toggle off"><i class="fa fa-toggle-on" id="toggle-on-Toc" aria-hidden="true"></i></a><a title="Click to Toggle on"><i class="fa fa-toggle-off" id="toggle-off-Toc" aria-hidden="true"></i></a></header><aside id="toc-column"><div id="toc-column-inner-wrapper"><div id="post-toc"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#k-means算法"><span class="toc-text">k-means算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#方法概述"><span class="toc-text">方法概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实现过程"><span class="toc-text">实现过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li></ol></div></div></aside><main id="main-content-column"><div id="main-content-wrapper"><div id="post-full-content"><h3 id="k-means算法"><a href="#k-means算法" class="headerlink" title="k-means算法"></a>k-means算法</h3><h4 id="方法概述"><a href="#方法概述" class="headerlink" title="方法概述"></a>方法概述</h4><p>&emsp;k-means算法以k为参数，把n个对象分成k个簇，使簇内具有较高的相似度，而簇间的相似度较低。 其处理过程如下： </p>
+<p>①　随机选择k个点作为初始的聚类中心； </p>
+<p>②　对于剩下的点，根据其与聚类中心的距离，将其归入最近的簇 </p>
+<p>③　对每个簇，计算所有点的均值作为新的聚类中心 </p>
+<p>④　重复2、3直到聚类中心不再发生改变</p>
+<h4 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h4><ol>
+<li>导入相关包numpy\matplotl\math</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt</span><br><span class="line"><span class="keyword">from</span> numpy.lib.scimath <span class="keyword">import</span> power</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>读取数据</li>
+</ol>
+<p>依次遍历数据的每一行，以“,”分割并将数据保存到<strong>数组dataMat[]</strong>中</p>
+<ol start="3">
+<li>向量距离计算</li>
+</ol>
+<p>使用欧式距离计算样本到中心的距离。对于样本 d 维样本 x 到中心 c 的欧式距离计算公式为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms1.jpg" alt="img"> </p>
+<ol start="4">
+<li>构建一个包含k个随机质心的集合</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">def randCent(dataSet, k):</span><br><span class="line">  n = shape(dataSet)[1]  //数据特征个数(即数据维度)</span><br><span class="line">//创建一个0矩阵，其中zeros为创建0填充的数组，mat是转换为矩阵，用于存放k个质心</span><br><span class="line">  centroids = mat(zeros((k, n)))</span><br><span class="line">  for i in range(n):  //遍历每个特征</span><br><span class="line">    minI = min(dataSet[:, i])  //获取最小值</span><br><span class="line">    rangeI = float(max(dataSet[:, i]) - minI)  //范围</span><br><span class="line">    centroids[:, i] = minI + rangeI * random.rand(k, 1)  //最小值+范围*随机数</span><br><span class="line">  return centroids</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>K均值聚类算法</li>
+</ol>
+<p>dataSet:数据集</p>
+<p>k:簇的个数</p>
+<p>distMeas:距离计算</p>
+<p>createCent:创建k个随机质心</p>
+<p>关于距离计算方式与随机生成k个质心可以选择其他方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">def kMeans(dataSet, k, distMeas=distEclud, createCent=randCent):</span><br><span class="line">  m = shape(dataSet)[0] # 数据数目</span><br><span class="line">  clusterAssment = mat(zeros((m, 2)))  //储存每个点的簇分配结果，第一列记录簇索引，第二列记录误差，误差指当前点到簇质心的距离，可用于评估聚类的效果</span><br><span class="line">  centroids = createCent(dataSet, k) //质心生成</span><br><span class="line">  clusterChanged = True //标记变量，为True则继续迭代</span><br><span class="line">  while clusterChanged:</span><br><span class="line">    clusterChanged = False</span><br><span class="line">//寻找最近的质心</span><br><span class="line">    for i in range(m): # 遍历每个数据</span><br><span class="line">      minDist = inf # 最小距离</span><br><span class="line">      minIndex = -1 # 最小距离的索引</span><br><span class="line">      for j in range(k): # 遍历每个质心</span><br><span class="line">        distJI = distMeas(centroids[j, :], dataSet[i, :]) # 计算该点到每个质心的距离</span><br><span class="line">        if distJI &lt; minDist: # 与之前的最小距离比较</span><br><span class="line">          minDist = distJI # 更新最小距离</span><br><span class="line">          minIndex = j # 更新最小距离的索引</span><br><span class="line">      //到此，便得到了该点到哪个质心距离最</span><br><span class="line">      if clusterAssment[i, 0] != minIndex: # 如果之前记录的簇索引不等于目前最小距离的簇索引</span><br><span class="line">        clusterChanged = True # 设置为True，继续遍历，直到簇分配结果不再改变为止</span><br><span class="line">        clusterAssment[i, :] = minIndex, minDist ** //记录新的簇索引和误差</span><br><span class="line">   print(centroids)</span><br><span class="line"></span><br><span class="line">//更新质心的位置</span><br><span class="line">    for cent in range(k):</span><br><span class="line">     ptsInclust = dataSet[nonzero(clusterAssment[:, 0].A == cent)[0]] # 获取给定簇的所有点</span><br><span class="line">      clusterAssment[:, 0].A == cent：表示clusterAssment第一列簇索引是否等于当前的簇</span><br><span class="line">      nonzero：返回一个元祖，第一个元素为True所在的行，第二个元素为True所在的列，这里取为行，即取出给定簇的数据</span><br><span class="line">      centroids[cent, :] = mean(ptsInclust, axis=0) # 然后计算均值，axis=0沿着列方向</span><br><span class="line">return centroids, clusterAssment # 返回质心与点分配结果</span><br><span class="line"></span><br><span class="line">//对数据进行可视化展示</span><br><span class="line">marker = [&apos;s&apos;, &apos;o&apos;, &apos;^&apos;, &apos;&lt;&apos;,&apos;&gt;&apos;,&apos;D&apos;,&apos;8&apos;]  # 散点图点的形状</span><br><span class="line">color = [&apos;b&apos;, &apos;m&apos;, &apos;y&apos;, &apos;g&apos;,&apos;c&apos;,&apos;k&apos;,&apos;r&apos;]  # 颜色X = np.array(datMat)  # 数据点</span><br><span class="line">CentX = np.array(myCentroids)  # 质心点</span><br><span class="line">Cents = np.array(clusterAssing[:, 0])  # 每个数据点对应的簇</span><br><span class="line">for i, Centroid in enumerate(Cents):  # 遍历每个数据对应的簇，返回数据的索引即其对应的簇</span><br><span class="line">  plt.scatter(X[i][0], X[i][1], marker=marker[int(Centroid[0])], c=color[int(Centroid[0])])  # 按簇画数据点</span><br><span class="line">plt.scatter(CentX[:, 0], CentX[:, 1], marker=&apos;*&apos;, c=&apos;r&apos;)  # 画质心</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>调参的参数仅仅是簇数k取不同k值，观察结果:</p>
+<ol>
+<li>聚成两类：<img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms2.jpg" alt="img"></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms3.jpg" alt="img"> </p>
+<ol start="2">
+<li>聚成三类：<img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms4.jpg" alt="img"></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms5.jpg" alt="img"> </p>
+<ol start="3">
+<li>聚成四类：<img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms6.jpg" alt="img"></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms7.jpg" alt="img"> </p>
+<ol start="4">
+<li>聚成五类</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms8.jpg" alt="img"> </p>
+<ol start="5">
+<li>聚成六类</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms9.jpg" alt="img"> </p>
+<ol start="6">
+<li>聚成7类</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms10.jpg" alt="img"> </p>
+<ol start="7">
+<li>设置簇的个数为8，观察发现数据还是分成7类，且分类效果并不好，有些数据密切分布。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms11.jpg" alt="img"> </p>
+<p>综上，可以看到分类效果最好的是聚成7类，k的取值应为7。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><p>K-Means的主要优点有：</p>
+<pre><code>- 原理比较简单，实现也是很容易，收敛速度快。
+- 聚类效果较优。
+- 算法的可解释度比较强。
+- 主要需要调参的参数仅仅是簇数k。</code></pre></li>
+<li><p>K-Means的主要缺点有：</p>
+<pre><code>- K值的选取不好把握(改进：可以通过在一开始给定一个适合的数值给k，通过一次K-means算法得到一次聚类中心。对于得到的聚类中心，根据得到的k个聚类的距离情况，合并距离最近的类，因此聚类中心数减小，当将其用于下次聚类时，相应的聚类数目也减小了，最终得到合适数目的聚类数。可以通过一个评判值E来确定聚类数得到一个合适的位置停下来，而不继续合并聚类中心。重复上述循环，直至评判函数收敛为止，最终得到较优聚类数的聚类结果)。
+    - 对于不是凸的数据集比较难收敛(改进：基于密度的聚类算法更加适合，比如DBSCAN算法)
+    - 如果各隐含类别的数据不平衡，比如各隐含类别的数据量严重失衡，或者各隐含类别的方差不同，则聚类效果不佳。
+    - 采用迭代方法，得到的结果只是局部最优。
+    - 对噪音和异常点比较的敏感(改进1：离群点检测的LOF算法，通过去除离群点后再聚类，可以减少离群点和孤立点对于聚类效果的影响；改进2：改成求点的中位数，这种聚类方式即K-Mediods聚类（K中值）)。
+    - 初始聚类中心的选择(改进1：k-means++;改进2：二分K-means）</code></pre></li>
+</ul>
+</div><div id="post-tags-container"><i class="fa fa-tags"></i> <a class="post-tag" href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">#数据挖掘</a></div></div></main><div id="pagination-wrapper"><a id="page-prev" href="/2021/01/01/%E5%BE%AE%E8%A7%822020/"><i class="fa fa-chevron-left"></i> 微观2020</a><a id="page-next" href="/2020/10/23/Pandas%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">Pandas数据分析 <i class="fa fa-chevron-right"></i></a></div><footer id="page-footer"><div id="footer-wrapper"><div id="blog-meta">&copy;2017-2021 By John Doe | Theme - <a id='theme-name' href="https://github.com/huan555/lemon-lime" target="_blank" rel="noopener"> Lemon-Lime</a> | Power By <a id='theme-powered-by' href=http://hexo.io> Hexo</a></div><div id="viewed-record"><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-eye" aria-hidden="true"></i> <span id="busuanzi_value_page_pv"></span></span></div><div id="copyright-wrapper"><i class="fa fa-cc" aria-hidden="true"></i><div id="copyright">Except where otherwise noted, content on this blog is licensed under <a rel="license" href=http://creativecommons.org/licenses/by-nc-sa/4.0/>CC BY-NC-SA 4.0</a>.</div></div><div id="contact-me"><div id="rss"><a href="/atom.xml" type="application/atom+xml" rel="alternate" target="_blank"><i class="fa fa-rss" aria-hidden="true"></i></a></div><div id="email"><a href="mailto:Emroy-can@outlook.com?Subject=blog" target="_blank" rel="noopener"><i class="fa fa-envelope" aria-hidden="true"></i></a></div><span id="github"><a href="https://github.com/prime234" target="_blank" rel="noopener"><i class="fa fa-github" aria-hidden="true"></i></a></span></div></div></footer><script src="/compass/js/blog.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":175,"height":200},"mobile":{"show":true},"log":false});</script></body>
