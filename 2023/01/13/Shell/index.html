@@ -1,0 +1,674 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="emroy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Shell本质Shell 是一个应用程序，它连接了用户和 Linux 内核，让用户能够更加高效、安全、低成本地使用 Linux 内核，这就是 Shell 的本质。 Shell 是如何连接用户和内核的？运行一个命令，大部分情况下 Shell 都会去调用内核暴露出来的接口，文件操作、输入输出、进程管理等功能都得依赖内核，接口其实就是一个一个的函数，使用内核就是调用这些函数。Shell 就是一个“中间商">
+<meta name="keywords" content="shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell">
+<meta property="og:url" content="https:&#x2F;&#x2F;www.prime.org.cn&#x2F;2023&#x2F;01&#x2F;13&#x2F;Shell&#x2F;index.html">
+<meta property="og:site_name" content="EMROY&#39;S BLOG">
+<meta property="og:description" content="Shell本质Shell 是一个应用程序，它连接了用户和 Linux 内核，让用户能够更加高效、安全、低成本地使用 Linux 内核，这就是 Shell 的本质。 Shell 是如何连接用户和内核的？运行一个命令，大部分情况下 Shell 都会去调用内核暴露出来的接口，文件操作、输入输出、进程管理等功能都得依赖内核，接口其实就是一个一个的函数，使用内核就是调用这些函数。Shell 就是一个“中间商">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2023-01-13T08:09:48.000Z">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Shell - EMROY&#39;S BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.prime.org.cn","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/totoro.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Emroy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Shell"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-13 10:00" pubdate>
+          January 13, 2023 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Shell</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Shell本质"><a href="#Shell本质" class="headerlink" title="Shell本质"></a>Shell本质</h2><p>Shell 是一个应用程序，它连接了用户和 Linux 内核，让用户能够更加高效、安全、低成本地使用 Linux 内核，这就是 Shell 的本质。</p>
+<h2 id="Shell-是如何连接用户和内核的？"><a href="#Shell-是如何连接用户和内核的？" class="headerlink" title="Shell 是如何连接用户和内核的？"></a>Shell 是如何连接用户和内核的？</h2><p>运行一个命令，大部分情况下 Shell 都会去调用内核暴露出来的接口，文件操作、输入输出、进程管理等功能都得依赖内核，接口其实就是一个一个的函数，使用内核就是调用这些函数。Shell 就是一个“中间商”，它在用户和内核之间“倒卖”数据。</p>
+<h2 id="进入Shell的两种方式"><a href="#进入Shell的两种方式" class="headerlink" title="进入Shell的两种方式"></a>进入Shell的两种方式</h2><ul>
+<li>进入linux控制台Console,从图形界面模式进入控制台模式，快捷键<code>Ctrl+Alt+Fn(n=1,2,3...)</code>来回切换<br>eg:CentOS 在启动时会创建 6 个虚拟控制台，按下快捷键Ctrl + Alt + Fn(n=2,3,4,5,6)可以从图形界面模式切换到控制台模式，按下Ctrl + Alt + F1可以从控制台模式再切换回图形界面模式。也就是说，1 号控制台被图形桌面程序占用了。</li>
+<li>使用终端<br>linux桌面环境的Terminal,CentOS 默认的图形界面程序是 GNOME，该终端模拟包也是 GNOME 自带的。<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">"hello World!"</span><br><span class="hljs-comment">#!是一个约定的标记，它告诉脚本需要什么解释器来执行 /bin/bash就是指明了解释器的具体位置。</span><br><span class="hljs-built_in">echo</span> 命令用于向窗口输出文本<br></code></pre></td></tr></table></figure>
+<h3 id="执行Shell脚本"><a href="#执行Shell脚本" class="headerlink" title="执行Shell脚本"></a>执行Shell脚本</h3><h4 id="新进程中执行"><a href="#新进程中执行" class="headerlink" title="新进程中执行"></a>新进程中执行</h4></li>
+</ul>
+<ol>
+<li><strong>作为可执行程序运行</strong><br>代码保存为test.sh文件,并cd到相应目录,在.sh文件中使用命令与在终端直接输入命令的效果是一样的。<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stata">chomd +x ./<span class="hljs-keyword">test</span>.<span class="hljs-keyword">sh</span> # 赋权限<br>./<span class="hljs-keyword">test</span>.<span class="hljs-keyword">sh</span> # 执行当前目录下的脚本<br># 直接写<span class="hljs-keyword">test</span>.<span class="hljs-keyword">sh</span>,linux系统会默认去PATH里寻找，一般只有/bin,/sbin,/usr/bin,/usr/sbin等在PATH里，当前目录通常不在<br></code></pre></td></tr></table></figure></li>
+<li><strong>作为解释器参数传递给Bash解释器</strong><br>直接运行解释器，参数是shell脚本文件名,不用再第一行指定解释器信息<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stata">/bin/<span class="hljs-keyword">sh</span> <span class="hljs-keyword">test</span>.<span class="hljs-keyword">sh</span><br>/bin/php <span class="hljs-keyword">test</span>.php<br>/bin/bash <span class="hljs-keyword">test</span>.<span class="hljs-keyword">sh</span> #用bash的绝对路径<br>bash <span class="hljs-keyword">test</span>.<span class="hljs-keyword">sh</span> #更简洁写法<br></code></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>检测是否开启了新进程<br>Linux 中的每一个进程都有一个唯一的 ID，称为 PID，使用<code>$$</code>变量就可以获取当前进程的 PID。<code>$$</code>是 Shell 中的特殊变量。<br>编写check.sh脚本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-built_in">echo</span> $$  <span class="hljs-comment">#输出当前进程PID</span><br></code></pre></td></tr></table></figure>
+<p>不同方法运行可以看到进程PID不一致，是不同的进程</p>
+<h3 id="当前进程中运行Shell脚本"><a href="#当前进程中运行Shell脚本" class="headerlink" title="当前进程中运行Shell脚本"></a>当前进程中运行Shell脚本</h3><p>source 是 Shell 内置命令的一种，它会读取脚本文件中的代码，并依次执行所有语句。你也可以理解为，source 命令会强制执行脚本文件中的全部命令，而忽略脚本文件的权限。</p>
+<p>source 命令的用法为：<code>source filename</code><br>也可以简写为：<code>. filename</code><br>两种写法的效果相同。对于第二种写法，注意点号.和文件名中间有一个空格。</p>
+<p>例如，使用 source 运行上节的 test.sh：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs elixir">[root<span class="hljs-variable">@localhost</span> ~]<span class="hljs-variable">$ </span>cd demo              <span class="hljs-comment">#切换到test.sh所在的目录</span><br>[root<span class="hljs-variable">@localhost</span> demo]<span class="hljs-variable">$ </span>source ./test.sh  <span class="hljs-comment">#使用source</span><br>Hello World !<br>[root<span class="hljs-variable">@localhost</span> demo]<span class="hljs-variable">$ </span>source test.sh    <span class="hljs-comment">#使用source</span><br>Hello World !<br>[root<span class="hljs-variable">@localhost</span> demo]<span class="hljs-variable">$ </span>. ./test.sh       <span class="hljs-comment">#使用点号</span><br>Hello World !<br>[root<span class="hljs-variable">@localhost</span> demo]<span class="hljs-variable">$ </span>. test.sh         <span class="hljs-comment">#使用点号</span><br>Hello World !<br></code></pre></td></tr></table></figure>
+<h2 id="Shell-是一种脚本语言"><a href="#Shell-是一种脚本语言" class="headerlink" title="Shell 是一种脚本语言"></a>Shell 是一种脚本语言</h2>   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment"># Copyright (c) http://c.biancheng.net/shell/</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">"What is your name?"</span><br><span class="hljs-built_in">read</span> PERSON  <span class="hljs-comment"># read 命令用来从标准输入文件（Standard Input，stdin，一般就是指键盘）读取用户输入的数据。</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">"Hello, <span class="hljs-variable">$PERSON</span>"</span> <span class="hljs-comment"># 输出变量 PERSON 内容</span><br></code></pre></td></tr></table></figure>
+<h3 id="Shell-文件包含"><a href="#Shell-文件包含" class="headerlink" title="Shell 文件包含"></a>Shell 文件包含</h3><p>和其他语言一样，Shell 也可以包含外部脚本。这样可以很方便的封装一些公用的代码作为一个独立的文件。</p>
+<p>Shell 文件包含的语法格式如下：<code>. filename</code>  # 注意点号(.)和文件名中间有一空格，或<code>source filename</code><br>创建两个 shell 脚本文件。test1.sh代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br>url=<span class="hljs-string">"http://www.runoob.com"</span><br></code></pre></td></tr></table></figure>
+<p>test2.sh代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment">#使用 . 号来引用test1.sh 文件</span><br>. ./test1.sh<br><br><span class="hljs-comment"># 或者使用以下包含文件代码</span><br><span class="hljs-comment"># source ./test1.sh</span><br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">"菜鸟教程官网地址：<span class="hljs-variable">$url</span>"</span><br></code></pre></td></tr></table></figure>
+<p>接下来，为 test2.sh添加可执行权限并执行：输出菜鸟教程官网地址：<a href="http://www.runoob.com" target="_blank" rel="noopener">http://www.runoob.com</a></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>chmod +x test2.sh <br><span class="hljs-variable">$ </span>./test2.sh<br></code></pre></td></tr></table></figure>
+
+<p>参考资料</p>
+<ul>
+<li><a href="http://c.biancheng.net/view/706.html" target="_blank" rel="noopener">http://c.biancheng.net/view/706.html</a></li>
+<li><a href="https://www.runoob.com/linux/linux-shell.html" target="_blank" rel="noopener">https://www.runoob.com/linux/linux-shell.html</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/shell/">#shell</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Shell</div>
+      <div>https://www.prime.org.cn/2023/01/13/Shell/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>emroy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 13, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/30/git%E6%80%BB%E7%BB%93-%E6%8A%80%E5%B7%A7/" title="git相关总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">git相关总结</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/12/MapReduce%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/" title="MapReduce程序开发👀">
+                        <span class="hidden-mobile">MapReduce程序开发👀</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":200,"height":400},"mobile":{"show":true},"log":false});</script></body>
+</html>

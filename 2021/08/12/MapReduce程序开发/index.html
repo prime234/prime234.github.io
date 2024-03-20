@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="emroy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="互联网精准广告推送算法 准备数据 创建&#x2F;data&#x2F;mydata目录，并切换到&#x2F;data&#x2F;mydata目录下，使用wget下载http:&#x2F;&#x2F;59.64.78.41:60000&#x2F;allfiles&#x2F;mr_sf&#x2F;tj_data.txt文件 123mkdir -p &#x2F;data&#x2F;mydata            &#x2F;&#x2F;在Linux本地创建&#x2F;data&#x2F;mydata目录。cd &#x2F;data&#x2F;mydata">
+<meta name="keywords" content="MapReduce">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce程序开发👀">
+<meta property="og:url" content="https:&#x2F;&#x2F;www.prime.org.cn&#x2F;2021&#x2F;08&#x2F;12&#x2F;MapReduce%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91&#x2F;index.html">
+<meta property="og:site_name" content="EMROY&#39;S BLOG">
+<meta property="og:description" content="互联网精准广告推送算法 准备数据 创建&#x2F;data&#x2F;mydata目录，并切换到&#x2F;data&#x2F;mydata目录下，使用wget下载http:&#x2F;&#x2F;59.64.78.41:60000&#x2F;allfiles&#x2F;mr_sf&#x2F;tj_data.txt文件 123mkdir -p &#x2F;data&#x2F;mydata            &#x2F;&#x2F;在Linux本地创建&#x2F;data&#x2F;mydata目录。cd &#x2F;data&#x2F;mydata">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2023-01-13T07:59:16.000Z">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>MapReduce程序开发👀 - EMROY&#39;S BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.prime.org.cn","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/totoro.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Emroy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MapReduce程序开发👀"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-08-12 15:24" pubdate>
+          August 12, 2021 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          120 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">MapReduce程序开发👀</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="互联网精准广告推送算法"><a href="#互联网精准广告推送算法" class="headerlink" title="互联网精准广告推送算法"></a>互联网精准广告推送算法</h2><ul>
+<li><p>准备数据<br> 创建/data/mydata目录，并切换到/data/mydata目录下，使用wget下载<a href="http://59.64.78.41:60000/allfiles/mr_sf/tj_data.txt文件" target="_blank" rel="noopener">http://59.64.78.41:60000/allfiles/mr_sf/tj_data.txt文件</a></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">mkdir -p <span class="hljs-regexp">/data/my</span>data            <span class="hljs-regexp">//</span>在Linux本地创建<span class="hljs-regexp">/data/my</span>data目录。<br>cd <span class="hljs-regexp">/data/my</span>data                 <span class="hljs-regexp">//</span>切换到<span class="hljs-regexp">/data/my</span>data目录<br>wget http:<span class="hljs-regexp">//</span><span class="hljs-number">59.64</span>.<span class="hljs-number">78.41</span>:<span class="hljs-number">60000</span><span class="hljs-regexp">/allfiles/m</span>r_sf<span class="hljs-regexp">/tj_data.txt   /</span><span class="hljs-regexp">/使用wget下载http:/</span><span class="hljs-regexp">/59.64.78.41:60000/</span>allfiles<span class="hljs-regexp">/mr_sf/</span>tj_data.txt文件<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用wget命令下载<a href="http://59.64.78.41:60000/allfiles/mr_sf/IKAnalyzer2012_u6.jar包和http://59.64.78.41:60000/allfiles/mapreduce1/hadoop2lib.tar.gz包。" target="_blank" rel="noopener">http://59.64.78.41:60000/allfiles/mr_sf/IKAnalyzer2012_u6.jar包和http://59.64.78.41:60000/allfiles/mapreduce1/hadoop2lib.tar.gz包。</a><br>将hadoop2lib.tar.gz解压到当前目录下。</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crystal">wget <span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/59.64.78.41:60000/allfiles</span><span class="hljs-regexp">/mr_sf/</span>IKAnalyzer2012_u6.jar<br>wget <span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/59.64.78.41:60000/allfiles</span><span class="hljs-regexp">/mapreduce1/hadoop</span>2<span class="hljs-keyword">lib</span>.tar.gz<br><span class="hljs-regexp">//</span>使用wget命令下载<span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/59.64.78.41:60000/allfiles</span><span class="hljs-regexp">/mr_sf/</span>IKAnalyzer2012_u6.jar和<span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/59.64.78.41:60000/allfiles</span><span class="hljs-regexp">/mapreduce1/hadoop</span>2<span class="hljs-keyword">lib</span>.tar.gz包。<br>tar zxvf hadoop2lib.tar.gz      并解压到当前目录。<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>切换到/apps/hadoop/sbin目录下，开启Hadoop相关进程（start-all.sh）</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-keyword">cd</span> <span class="hljs-string">/apps/hadoop/sbin</span>               <span class="hljs-string">//</span>切换目录到<span class="hljs-string">/apps/hadoop/sbin</span>下，<br><span class="hljs-string">./start-all.sh</span>                       <span class="hljs-string">//</span>启动hadoop。<br></code></pre></td></tr></table></figure></li>
+<li><p>输入JPS查看一下相关进程是否已经启动。</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">jps    <span class="hljs-comment">//查看相关进程是否已经启动。</span><br></code></pre></td></tr></table></figure></li>
+<li><p>在HDFS的根下创建一个/tj/input目录（提示：-mkdir），并将/data/mydata目录下的tj_data.txt文件上传到HDFS上的/tj/input文件夹下（提示：-put）</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vim">hadoop fs -<span class="hljs-built_in">mkdir</span> /<span class="hljs-keyword">tj</span>               //在HDFS的根下创建一个/<span class="hljs-keyword">tj</span>目录<br>hadoop fs -<span class="hljs-built_in">mkdir</span> /<span class="hljs-keyword">tj</span>/<span class="hljs-built_in">input</span>          //在HDFS的根下创建一个/<span class="hljs-keyword">tj</span>/<span class="hljs-built_in">input</span>目录<br>hadoop fs -<span class="hljs-keyword">put</span> /data/mydata/tj_data.txt /<span class="hljs-keyword">tj</span>/<span class="hljs-built_in">input</span>    /将/data/mydata目录下的tj_data.txt文件上传到HDFS上的/<span class="hljs-keyword">tj</span>/<span class="hljs-built_in">input</span>文件夹下<br></code></pre></td></tr></table></figure></li>
+<li><p>打开Eclipse，创建一个Java项目, 项目名为：mr_sf</p>
+</li>
+<li><p>在该项目下，创建一个名为：mr_tj的包</p>
+</li>
+<li><p>创建一个名为：libs 的文件夹，用于存放项目所需的jar包</p>
+</li>
+<li><p>将/data/mydata文件夹下的IKAnalyzer2012_u6.jar包和hadoop2lib中的jar包，全部拷贝到eclipse中，导入到libs文件夹下</p>
+</li>
+<li><p>右键选中libs目录下导入的所有的jar包，依次选择Build Path=&gt;Add to Build Path</p>
+</li>
+<li><p>在mr_tj包中创建一个Paths类，功能为：定义输入输出目录</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">package</span> mr_tj;  <br><span class="hljs-keyword">public</span> class Paths &#123;  <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">String</span> TJ_INPUT = <span class="hljs-string">"hdfs://localhost:9000/tj/input"</span>;  <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">String</span> TJ_OUTPUT1 = <span class="hljs-string">"hdfs://localhost:9000/tj/output1"</span>;  <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">String</span> TJ_OUTPUT2 = <span class="hljs-string">"hdfs://localhost:9000/tj/output2"</span>;  <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">String</span> TJ_OUTPUT3 = <span class="hljs-string">"hdfs://localhost:9000/tj/output3"</span>;  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="创建第一个MapReduce。"><a href="#创建第一个MapReduce。" class="headerlink" title="创建第一个MapReduce。"></a>创建第一个MapReduce。</h3><ul>
+<li><p>创建一个名为FirstMapper的类，功能为：计算该条微博中，每个词出现的次数，也就是TF功能和微博总条数（N值）</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">package</span> mr_tj; <br><span class="hljs-keyword">import</span> java.io.IOException; <br><span class="hljs-keyword">import</span> java.io.StringReader; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.IntWritable; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.LongWritable; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.Text; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.Mapper; <br><span class="hljs-keyword">import</span> org.wltea.analyzer.core.IKSegmenter; <br><span class="hljs-keyword">import</span> org.wltea.analyzer.core.Lexeme; <br> <br><span class="hljs-keyword">public</span> class FirstMapper extends Mapper&lt;LongWritable, Text, Text, IntWritable&gt; &#123; <br>    @Override <br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-built_in">map</span>(LongWritable <span class="hljs-built_in">key</span>, Text value, Context context) <span class="hljs-keyword">throws</span> IOException, InterruptedException &#123; <br>        <span class="hljs-keyword">String</span>[] <span class="hljs-built_in">line</span> = value.toString().<span class="hljs-built_in">split</span>(<span class="hljs-string">"\t"</span>);  <span class="hljs-comment">//此处补充：以tab键为分隔符 </span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">line</span>.length &gt;= <span class="hljs-number">2</span>) &#123; <br>            <span class="hljs-keyword">String</span> id = <span class="hljs-built_in">line</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">trim</span>();     <span class="hljs-comment">//此处补充，微博的ID </span><br>            <span class="hljs-keyword">String</span> content = <span class="hljs-built_in">line</span>[<span class="hljs-number">1</span>].<span class="hljs-built_in">trim</span>();  <span class="hljs-comment">//此处补充，微博的内容 </span><br>            StringReader sr = <span class="hljs-keyword">new</span> StringReader(content); <br>            IKSegmenter iks = <span class="hljs-keyword">new</span> IKSegmenter(sr, <span class="hljs-keyword">true</span>);  <span class="hljs-comment">//使用 </span><br>            Lexeme lexeme = <span class="hljs-keyword">null</span>; <br>            <span class="hljs-keyword">while</span> ((lexeme = iks.next()) != <span class="hljs-keyword">null</span>) &#123; <br>                <span class="hljs-keyword">String</span> word = lexeme.getLexemeText();   <span class="hljs-comment">//word就是分完的每个词 </span><br>                context.write(<span class="hljs-keyword">new</span> Text(word+<span class="hljs-string">"_"</span>+id), <span class="hljs-keyword">new</span> IntWritable(<span class="hljs-number">1</span>));<span class="hljs-comment">//此处补充，输出单词_微博ID，和 次数1 </span><br>            &#125; <br>            sr.close(); <br>            context.write(<span class="hljs-keyword">new</span> Text(<span class="hljs-string">"count"</span>), <span class="hljs-keyword">new</span> IntWritable(<span class="hljs-number">1</span>));<span class="hljs-comment">// </span><br>        &#125; <span class="hljs-keyword">else</span> &#123; <br>            System.err.<span class="hljs-built_in">println</span>(<span class="hljs-string">"error:"</span> + value.toString() + <span class="hljs-string">"-----------------------"</span>); <br>        &#125; <br>    &#125; <br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>接下来，创建一个FirstReducer类，功能为：合并相同key值的数据，输出TF及N<br>完整代码为：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">package mr_tj; <br><span class="hljs-keyword">import</span> java.io.IOException; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.IntWritable; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.Text; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.Reducer; <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-symbol">FirstReducer</span> <span class="hljs-symbol">extends</span> <span class="hljs-symbol">Reducer</span>&lt;<span class="hljs-symbol">Text, <span class="hljs-symbol">IntWritable</span>, <span class="hljs-symbol">Text</span>, <span class="hljs-symbol">IntWritable</span></span>&gt; &#123; <br>    @Override              <span class="hljs-comment">//text就是map中计算出来的key值 </span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> reduce(Text text, Iterable&lt;IntWritable&gt; iterable, Context context) throws IOException, InterruptedException &#123; <br>    <span class="hljs-built_in">int</span> sum = <span class="hljs-number">0</span>; <span class="hljs-comment">//初始化微博条数 </span><br>    <span class="hljs-keyword">for</span> (IntWritable <span class="hljs-built_in">int</span>Writable : iterable) &#123; <br>          sum += <span class="hljs-built_in">int</span>Writable.<span class="hljs-keyword">get</span>();   <span class="hljs-comment">//此处补充，提示：调用intWritable的get()方法可以获得intWritable中存储的微博条数 </span><br>    &#125;<span class="hljs-comment">//计算微博总条数 </span><br>    <span class="hljs-keyword">if</span> (text.equals(<span class="hljs-string">"count"</span>)) &#123; <br>    System.<span class="hljs-keyword">out</span>.println(text.toString() + <span class="hljs-string">"=="</span> + sum); <br>    &#125; <br>    context.write(text, new IntWritable(sum));<span class="hljs-comment">//输出微博总条数。 </span><br>    &#125; <br>    &#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>创建一个FirstPartition类，功能为：分区，如果key值为count，就将数据放入一个单独的分区，如果key值为其他的，就平均分配到三个分区<br>完整代码为：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-keyword">package</span> mr_tj; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.<span class="hljs-type">IntWritable</span>; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.<span class="hljs-type">Text</span>; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.lib.partition.<span class="hljs-type">HashPartitioner</span>; <br>public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FirstPartition</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">HashPartitioner&lt;Text</span>, <span class="hljs-title">IntWritable&gt;</span> </span>&#123; <br>    <span class="hljs-meta">@Override</span> <br>    public int getPartition(<span class="hljs-type">Text</span> key, <span class="hljs-type">IntWritable</span> value, int numReduceTasks) &#123; <br>        <span class="hljs-comment">//如果key值为count，就返回3，其他的key值就平均分配到三个分区， </span><br>        <span class="hljs-keyword">if</span> (key.equals(<span class="hljs-keyword">new</span> <span class="hljs-type">Text</span>(<span class="hljs-string">"count"</span>))) &#123; <br>            <span class="hljs-keyword">return</span> <span class="hljs-number">3</span>; <br>        &#125; <span class="hljs-keyword">else</span> &#123; <br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.getPartition(key, value, numReduceTasks - <span class="hljs-number">1</span>); <br><span class="hljs-comment">//numReduceTasks - 1的意思是有4个reduce，其中一个已经被key值为count的占用了，所以数据只能分配到剩下的三个分区中了 </span><br><span class="hljs-comment">//使用super，可以调用父类的HashPartitioner </span><br>        &#125; <br>    &#125; <br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>创建一个FirstJob类，功能为：执行计算，得到TF和N</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">package mr_tj; <br>import org.apache.hadoop.conf.Configuration; <br>import org.apache.hadoop.fs.Path; <br>import org.apache.hadoop.io.IntWritable; <br>import org.apache.hadoop.io.Text; <br>import org.apache.hadoop.mapreduce.Job; <br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat; <br>import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat; <br>public <span class="hljs-keyword">class</span> FirstJob &#123; <br>    public static void main(String<span class="hljs-literal">[]</span> args) &#123; <br>        Configuration conf = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Configuration()</span>; <br>        conf.set(<span class="hljs-string">"yarn.resourcemanager.hostname"</span>, <span class="hljs-string">"zhangyu@d2e674ec1e78"</span>); <br>        <span class="hljs-keyword">try</span> &#123; <br>            Job job = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Job</span>.</span></span>get<span class="hljs-constructor">Instance(<span class="hljs-params">conf</span>, <span class="hljs-string">"weibo1"</span>)</span>; <br>            job.set<span class="hljs-constructor">JarByClass(FirstJob.<span class="hljs-params">class</span>)</span>; <br>            <span class="hljs-comment">//设置map任务的输出key类型，value类型 </span><br>            job.set<span class="hljs-constructor">OutputKeyClass(Text.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">OutputValueClass(IntWritable.<span class="hljs-params">class</span>)</span>; <br>            <span class="hljs-comment">//设置reduce个数为4 </span><br>            job.set<span class="hljs-constructor">NumReduceTasks(4)</span>; <br>            <span class="hljs-comment">//定义一个partition表分区，哪些数据应该进入哪些分区 </span><br>            job.set<span class="hljs-constructor">PartitionerClass(FirstPartition.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">MapperClass(FirstMapper.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">CombinerClass(FirstReducer.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">ReducerClass(FirstReducer.<span class="hljs-params">class</span>)</span>; <br>            <span class="hljs-comment">//设置执行任务时，数据获取的目录及数据输出的目录 </span><br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileInputFormat</span>.</span></span>add<span class="hljs-constructor">InputPath(<span class="hljs-params">job</span>, <span class="hljs-params">new</span> Path(Paths.TJ_INPUT)</span>); <br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileOutputFormat</span>.</span></span>set<span class="hljs-constructor">OutputPath(<span class="hljs-params">job</span>, <span class="hljs-params">new</span> Path(Paths.TJ_OUTPUT1)</span>); <br>            <span class="hljs-keyword">if</span> (job.wait<span class="hljs-constructor">ForCompletion(<span class="hljs-params">true</span>)</span>) &#123; <br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(<span class="hljs-string">"FirstJob-执行完毕"</span>); <br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TwoJob</span>.</span></span>main<span class="hljs-constructor">Job()</span>; <br>            &#125; <br>        &#125; catch (Exception e) &#123; <br>            e.print<span class="hljs-constructor">StackTrace()</span>; <br>        &#125; <br>    &#125; <br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="创建第二个MapReduce。"><a href="#创建第二个MapReduce。" class="headerlink" title="创建第二个MapReduce。"></a>创建第二个MapReduce。</h3></li>
+<li><p>创建一个TwoMapper类，功能为：统计每个词的DF<br>完整代码为：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">package</span> mr_tj; <br><span class="hljs-keyword">import</span> java.io.IOException; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.IntWritable; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.LongWritable; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.Text; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.Mapper; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileSplit; <br><span class="hljs-keyword">public</span> class TwoMapper extends Mapper&lt;LongWritable, Text, Text, IntWritable&gt; &#123; <br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-built_in">map</span>(LongWritable <span class="hljs-built_in">key</span>, Text value, Context context) <span class="hljs-keyword">throws</span> IOException, InterruptedException &#123; <br>        FileSplit fs = (FileSplit) context.getInputSplit(); <br>        <span class="hljs-comment">//map时拿到split片段所在文件的文件名 </span><br>        <span class="hljs-keyword">if</span> (!fs.getPath().getName().contains(<span class="hljs-string">"part-r-00003"</span>)) &#123; <br>        <span class="hljs-comment">//拿到TF的统计结果 </span><br>            <span class="hljs-keyword">String</span>[] <span class="hljs-built_in">line</span> = value.toString().<span class="hljs-built_in">trim</span>().<span class="hljs-built_in">split</span>(<span class="hljs-string">"\t"</span>)           ;<span class="hljs-comment">// 此处补充，以tab键为分隔符 </span><br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">line</span>.length &gt;= <span class="hljs-number">2</span>) &#123; <br>                <span class="hljs-keyword">String</span>[] ss = <span class="hljs-built_in">line</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">split</span>(<span class="hljs-string">"_"</span>)                  ;<span class="hljs-comment">//此处补充，以_为分隔符 </span><br>                <span class="hljs-keyword">if</span> (ss.length &gt;= <span class="hljs-number">2</span>) &#123; <br>                    <span class="hljs-keyword">String</span> w = ss[<span class="hljs-number">0</span>]; <br>                    <span class="hljs-comment">//统计DF，该词在所有微博中出现的条数，一条微博即使出现两次该词，也算一条 </span><br>                    context.write(<span class="hljs-keyword">new</span> Text(w), <span class="hljs-keyword">new</span> IntWritable(<span class="hljs-number">1</span>));<span class="hljs-comment">//此处补充，输出结果 </span><br>                &#125; <br>            &#125; <span class="hljs-keyword">else</span> &#123; <br>                System.out.<span class="hljs-built_in">println</span>(<span class="hljs-string">"error:"</span> + value.toString() + <span class="hljs-string">"-------------"</span>); <br>            &#125; <br>        &#125; <br>    &#125; <br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个TwoReducer类<br>完整代码为：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">package mr_tj; <br><span class="hljs-keyword">import</span> java.io.IOException; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.IntWritable; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.Text; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.Reducer; <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-symbol">TwoReducer</span> <span class="hljs-symbol">extends</span> <span class="hljs-symbol">Reducer</span>&lt;<span class="hljs-symbol">Text, <span class="hljs-symbol">IntWritable</span>, <span class="hljs-symbol">Text</span>, <span class="hljs-symbol">IntWritable</span></span>&gt; &#123; <br>    <span class="hljs-keyword">protected</span> <span class="hljs-built_in">void</span> reduce(Text key, Iterable&lt;IntWritable&gt; arg1, Context context) throws IOException, InterruptedException &#123; <br>    <span class="hljs-built_in">int</span> sum = <span class="hljs-number">0</span>;<span class="hljs-comment">//此处补充，初始化统计值 </span><br>    <span class="hljs-keyword">for</span> (IntWritable i : arg1) &#123; <br>     sum = sum + i.<span class="hljs-keyword">get</span>();<span class="hljs-comment">//此处补充，统计值累加 </span><br>    &#125; <br>    context.write(key, new IntWritable(sum));<span class="hljs-comment">//此处补充，输出统计结果 </span><br>    &#125; <br>    &#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>创建一个TwoJob类，功能为：执行计算，得到DF<br>完整代码为：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">package mr_tj; <br>import org.apache.hadoop.conf.Configuration; <br>import org.apache.hadoop.fs.Path; <br>import org.apache.hadoop.io.IntWritable; <br>import org.apache.hadoop.io.Text; <br>import org.apache.hadoop.mapreduce.Job; <br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat; <br>import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat; <br>public <span class="hljs-keyword">class</span> TwoJob &#123; <br>    public static void main<span class="hljs-constructor">Job()</span> &#123; <br>        Configuration config = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Configuration()</span>; <br>        config.set(<span class="hljs-string">"yarn.resourcemanager.hostname"</span>, <span class="hljs-string">"zhangyu@d2e674ec1e78"</span>); <br>        <span class="hljs-keyword">try</span> &#123; <br>            Job job = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Job</span>.</span></span>get<span class="hljs-constructor">Instance(<span class="hljs-params">config</span>, <span class="hljs-string">"weibo2"</span>)</span>; <br>            job.set<span class="hljs-constructor">JarByClass(TwoJob.<span class="hljs-params">class</span>)</span>; <br>            <span class="hljs-comment">//设置map任务的输出key类型，value类型 </span><br>            job.set<span class="hljs-constructor">OutputKeyClass(Text.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">OutputValueClass(IntWritable.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">MapperClass(TwoMapper.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">CombinerClass(TwoReducer.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">ReducerClass(TwoReducer.<span class="hljs-params">class</span>)</span>; <br>            <span class="hljs-comment">//设置任务运行时，数据的输入输出目录，这里的输入数据是上一个mapreduce的输出 </span><br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileInputFormat</span>.</span></span>add<span class="hljs-constructor">InputPath(<span class="hljs-params">job</span>, <span class="hljs-params">new</span> Path(Paths.TJ_OUTPUT1)</span>); <br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileOutputFormat</span>.</span></span>set<span class="hljs-constructor">OutputPath(<span class="hljs-params">job</span>, <span class="hljs-params">new</span> Path(Paths.TJ_OUTPUT2)</span>); <br>            <span class="hljs-keyword">if</span> (job.wait<span class="hljs-constructor">ForCompletion(<span class="hljs-params">true</span>)</span>) &#123; <br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(<span class="hljs-string">"TwoJob-执行完毕"</span>); <br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">LastJob</span>.</span></span>main<span class="hljs-constructor">Job()</span>; <br>            &#125; <br>        &#125; catch (Exception e) &#123; <br>            e.print<span class="hljs-constructor">StackTrace()</span>; <br>        &#125; <br>    &#125; <br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="创建第三个MapReduce。"><a href="#创建第三个MapReduce。" class="headerlink" title="创建第三个MapReduce。"></a>创建第三个MapReduce。</h3></li>
+<li><p>创建一个LastMapper类，功能为：执行W = TF * Log(N/DF)计算<br>完整代码为：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">package</span> mr_tj; <br><span class="hljs-keyword">import</span> java.io.<span class="hljs-keyword">BufferedReader</span>; <br><span class="hljs-keyword">import</span> java.io.FileReader; <br><span class="hljs-keyword">import</span> java.io.IOException; <br><span class="hljs-keyword">import</span> java.net.URI; <br><span class="hljs-keyword">import</span> java.<span class="hljs-built_in">text</span>.NumberFormat; <br><span class="hljs-keyword">import</span> java.util.<span class="hljs-keyword">HashMap</span>; <br><span class="hljs-keyword">import</span> java.util.Map; <br><span class="hljs-keyword">import</span> org.apache.hadoop.fs.Path; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.LongWritable; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.Text; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.Mapper; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileSplit; <br><span class="hljs-keyword">public</span> class LastMapper extends Mapper&lt;LongWritable, Text, Text, Text&gt; &#123; <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Map&lt;<span class="hljs-keyword">String</span>, Integer&gt; cmap = <span class="hljs-keyword">null</span>; <span class="hljs-comment">//cmap为count </span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Map&lt;<span class="hljs-keyword">String</span>, Integer&gt; df = <span class="hljs-keyword">null</span>; <br>    <span class="hljs-comment">//setup方法，表示在map之前 </span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setup</span>(Context context) <span class="hljs-keyword">throws</span> IOException, InterruptedException &#123; <br>        <span class="hljs-keyword">if</span> (cmap == <span class="hljs-keyword">null</span> || cmap.<span class="hljs-built_in">size</span>() == <span class="hljs-number">0</span> || df == <span class="hljs-keyword">null</span> || df.<span class="hljs-built_in">size</span>() == <span class="hljs-number">0</span>) &#123; <br>            URI[] ss = context.getCacheFiles(); <br>            <span class="hljs-keyword">if</span> (ss != <span class="hljs-keyword">null</span>) &#123; <br>                <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; ss.length; i++) &#123; <br>                    URI uri = ss[i]; <br>                    <span class="hljs-comment">//判断如果该文件是part-r-00003，那就是count文件，将数据取出来放入到一个cmap中 </span><br>                    <span class="hljs-keyword">if</span> (uri.getPath().endsWith(<span class="hljs-string">"part-r-00003"</span>)) &#123; <br>                        Path path = <span class="hljs-keyword">new</span> Path(uri.getPath()); <br>                        <span class="hljs-keyword">BufferedReader</span> br = <span class="hljs-keyword">new</span> <span class="hljs-keyword">BufferedReader</span>(<span class="hljs-keyword">new</span> FileReader(path.getName())); <br>                        <span class="hljs-keyword">String</span> <span class="hljs-built_in">line</span> = br.readLine(); <br>                        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">line</span>.startsWith(<span class="hljs-string">"count"</span>)) &#123; <br>                            <span class="hljs-keyword">String</span>[] ls = <span class="hljs-built_in">line</span>.<span class="hljs-built_in">split</span>(<span class="hljs-string">"\t"</span>);<span class="hljs-comment">//此处补充，以tab键为分隔符 </span><br>                            cmap = <span class="hljs-keyword">new</span> <span class="hljs-keyword">HashMap</span>&lt;<span class="hljs-keyword">String</span>, Integer&gt;(); <br>                            cmap.put(ls[<span class="hljs-number">0</span>], Integer.parseInt(ls[<span class="hljs-number">1</span>].<span class="hljs-built_in">trim</span>())); <br>                        &#125; <br>                        br.close(); <br>                    &#125; <span class="hljs-keyword">else</span> &#123; <br>                    <span class="hljs-comment">//其他的认为是DF文件，将数据取出来放到df中 </span><br>                        df = <span class="hljs-keyword">new</span> <span class="hljs-keyword">HashMap</span>&lt;<span class="hljs-keyword">String</span>, Integer&gt;(); <br>                        Path path = <span class="hljs-keyword">new</span> Path(uri.getPath()); <br>                        <span class="hljs-keyword">BufferedReader</span> br = <span class="hljs-keyword">new</span> <span class="hljs-keyword">BufferedReader</span>(<span class="hljs-keyword">new</span> FileReader(path.getName())); <br>                        <span class="hljs-keyword">String</span> <span class="hljs-built_in">line</span>; <br>                        <span class="hljs-keyword">while</span> ((<span class="hljs-built_in">line</span> = br.readLine()) != <span class="hljs-keyword">null</span>) &#123; <br>                            <span class="hljs-keyword">String</span>[] ls = <span class="hljs-built_in">line</span>.<span class="hljs-built_in">split</span>(<span class="hljs-string">"\t"</span>)                ;<span class="hljs-comment">//此处补充，以tab键为分隔符 </span><br>                            df.put(ls[<span class="hljs-number">0</span>], Integer.parseInt(ls[<span class="hljs-number">1</span>].<span class="hljs-built_in">trim</span>())); <br>                         <span class="hljs-comment">//df这个map以单词作为key，以单词的df值作为value </span><br>                        &#125; <br>                        br.close(); <br>                    &#125; <br>                &#125; <br>            &#125; <br>        &#125; <br>    &#125; <br> <br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-built_in">map</span>(LongWritable <span class="hljs-built_in">key</span>, Text value, Context context) <span class="hljs-keyword">throws</span> IOException, InterruptedException &#123; <br>        FileSplit fs = (FileSplit) context.getInputSplit(); <br> <br>        <span class="hljs-keyword">if</span> (!fs.getPath().getName().contains(<span class="hljs-string">"part-r-00003"</span>)) &#123; <br> <br>            <span class="hljs-keyword">String</span>[] v = value.toString().<span class="hljs-built_in">trim</span>().<span class="hljs-built_in">split</span>(<span class="hljs-string">"\t"</span>);<span class="hljs-comment">//此处补充，以tab键为分隔符 </span><br>            <span class="hljs-keyword">if</span> (v.length &gt;= <span class="hljs-number">2</span>) &#123; <br>                <span class="hljs-built_in">int</span> tf = Integer.parseInt(v[<span class="hljs-number">1</span>].<span class="hljs-built_in">trim</span>()); <br>                <span class="hljs-keyword">String</span>[] ss = v[<span class="hljs-number">0</span>].<span class="hljs-built_in">split</span>(<span class="hljs-string">"_"</span>) ;<span class="hljs-comment">//此处补充，以_为分隔符 </span><br>                <span class="hljs-keyword">if</span> (ss.length &gt;= <span class="hljs-number">2</span>) &#123; <br>                    <span class="hljs-keyword">String</span> w = ss[<span class="hljs-number">0</span>]; <br>                    <span class="hljs-keyword">String</span> id = ss[<span class="hljs-number">1</span>]; <br>                    <span class="hljs-comment">//执行W = TF * Log(N/DF)计算 </span><br>                    <span class="hljs-keyword">double</span> s = tf * Math.<span class="hljs-built_in">log</span>(cmap.<span class="hljs-built_in">get</span>(<span class="hljs-string">"count"</span>) / df.<span class="hljs-built_in">get</span>(w)); <br>                    <span class="hljs-comment">//格式化，保留小数点后五位 </span><br>                    NumberFormat <span class="hljs-built_in">nf</span> = NumberFormat.getInstance(); <br>                    <span class="hljs-built_in">nf</span>.setMaximumFractionDigits(<span class="hljs-number">5</span>); <br>                    <span class="hljs-comment">//以 微博id+词：权重 输出 </span><br>                    context.write(<span class="hljs-keyword">new</span> Text(id), <span class="hljs-keyword">new</span> Text(w+<span class="hljs-string">":"</span>+ <span class="hljs-built_in">nf</span>.format(s)));<span class="hljs-comment">//此处补充，完成输出 </span><br>                &#125; <br>            &#125; <span class="hljs-keyword">else</span> &#123; <br>                System.out.<span class="hljs-built_in">println</span>(value.toString() + <span class="hljs-string">"-------------"</span>); <br>            &#125; <br>        &#125; <br>    &#125; <br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>创建一个LastReducer类<br>完整代码为：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-keyword">package</span> mr_tj; <br><span class="hljs-keyword">import</span> java.io.<span class="hljs-type">IOException</span>; <br><span class="hljs-keyword">import</span> org.apache.hadoop.io.<span class="hljs-type">Text</span>; <br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.<span class="hljs-type">Reducer</span>; <br>public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LastReducer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Reducer&lt;Text</span>, <span class="hljs-title">Text</span>, <span class="hljs-title">Text</span>, <span class="hljs-title">Text&gt;</span> </span>&#123; <br>    <span class="hljs-keyword">protected</span> void reduce(<span class="hljs-type">Text</span> key, <span class="hljs-type">Iterable</span>&lt;<span class="hljs-type">Text</span>&gt; arg1, <span class="hljs-type">Context</span> context) <span class="hljs-keyword">throws</span> <span class="hljs-type">IOException</span>, <span class="hljs-type">InterruptedException</span> &#123; <br>    <span class="hljs-type">StringBuffer</span> sb = <span class="hljs-keyword">new</span> <span class="hljs-type">StringBuffer</span>(); <br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">Text</span> i : arg1) &#123; <br>    sb.append(i.toString() + <span class="hljs-string">"\t"</span>); <br>    &#125; <br>    context.write(key , <span class="hljs-keyword">new</span> <span class="hljs-type">Text</span>(sb.toString()));<span class="hljs-comment">//此处补充，完成输出 </span><br>    &#125; <br>    &#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>创建一个LastJob类，功能为：运行第三个MR<br>完整代码为：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">package mr_tj; <br>import org.apache.hadoop.conf.Configuration; <br>import org.apache.hadoop.fs.Path; <br>import org.apache.hadoop.io.Text; <br>import org.apache.hadoop.mapreduce.Job; <br>import org.apache.hadoop.mapreduce.lib.input.FileInputFormat; <br>import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat; <br>public <span class="hljs-keyword">class</span> LastJob &#123; <br>    public static void main<span class="hljs-constructor">Job()</span> &#123; <br>        Configuration config = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Configuration()</span>; <br>        config.set(<span class="hljs-string">"yarn.resourcemanager.hostname"</span>, <span class="hljs-string">"zhangyu@d2e674ec1e78"</span>); <br>        <span class="hljs-keyword">try</span> &#123; <br>            Job job = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Job</span>.</span></span>get<span class="hljs-constructor">Instance(<span class="hljs-params">config</span>, <span class="hljs-string">"weibo3"</span>)</span>; <br>            job.set<span class="hljs-constructor">JarByClass(LastJob.<span class="hljs-params">class</span>)</span>; <br>            <span class="hljs-comment">//将第一个job和第二个job的输出作为第三个job的输入</span><br>            job.add<span class="hljs-constructor">CacheFile(<span class="hljs-params">new</span> Path(Paths.TJ_OUTPUT1 + <span class="hljs-string">"/part-r-00003"</span>)</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">Uri()</span>); <br>            job.add<span class="hljs-constructor">CacheFile(<span class="hljs-params">new</span> Path(Paths.TJ_OUTPUT2 + <span class="hljs-string">"/part-r-00000"</span>)</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">Uri()</span>); <br>            job.set<span class="hljs-constructor">OutputKeyClass(Text.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">OutputValueClass(Text.<span class="hljs-params">class</span>)</span>; <br>            <span class="hljs-comment">// job.setMapperClass(); </span><br>            job.set<span class="hljs-constructor">MapperClass(LastMapper.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">CombinerClass(LastReducer.<span class="hljs-params">class</span>)</span>; <br>            job.set<span class="hljs-constructor">ReducerClass(LastReducer.<span class="hljs-params">class</span>)</span>; <br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileInputFormat</span>.</span></span>add<span class="hljs-constructor">InputPath(<span class="hljs-params">job</span>, <span class="hljs-params">new</span> Path(Paths.TJ_OUTPUT1)</span>); <br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FileOutputFormat</span>.</span></span>set<span class="hljs-constructor">OutputPath(<span class="hljs-params">job</span>, <span class="hljs-params">new</span> Path(Paths.TJ_OUTPUT3)</span>); <br>            <span class="hljs-keyword">if</span> (job.wait<span class="hljs-constructor">ForCompletion(<span class="hljs-params">true</span>)</span>) &#123; <br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(<span class="hljs-string">"LastJob-执行完毕"</span>); <br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(<span class="hljs-string">"全部工作执行完毕"</span>); <br>            &#125; <br>        &#125; catch (Exception e) &#123; <br>            e.print<span class="hljs-constructor">StackTrace()</span>; <br>        &#125; <br>    &#125; <br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>在FirstJob类中，单机右键，依次选择Run As=&gt; Run on Hadoop<br>可以在Console界面看到执行进度</p>
+</li>
+<li><p>在HDFS上查看一下结果数据（-ls -R）</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">hadoop fs -ls -R <span class="hljs-string">/tj</span>    <span class="hljs-string">//</span>查看结果数据。<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>查看一下各关键字的权重（提示：-cat，各关键字的权重保存在hdfs的/tj/output3/part-r-00000中）得到各关键字的权重后就可以知道哪些是关注华为手机的优质用户了，我们再向这些优质用户投送华为手机的广告，就可以达到精准广告推送的效果了。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">Hadoop fs -cat /tj/output3/part-r<span class="hljs-number">-00000</span>    <span class="hljs-comment">//查看各</span><br>关键字的权重并保存在hdfs的/tj/output3/part-r<span class="hljs-number">-00000</span>中<br></code></pre></td></tr></table></figure></li>
+<li><p>在/data/mydata目录下分别建立output1,output2,output3三个子目录，并修改其访问权限，参照以下示例(以output1为例，其他两个类似处理)：<br>//分别建立output1,output2,output3三个子目录，并修改其访问权限</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs groovy">sudo mkdir <span class="hljs-regexp">/data/</span>mydata/output1        <br>sudo chmod <span class="hljs-number">777</span> <span class="hljs-regexp">/data/</span>mydata<span class="hljs-regexp">/output1     /</span><span class="hljs-regexp">/使用chmod方法，赋予data/</span>mydata/output1文件<span class="hljs-number">777</span>权限<br>sudo mkdir <span class="hljs-regexp">/data/</span>mydata<span class="hljs-regexp">/output2       /</span>/建立output2子目录<br>sudo chmod <span class="hljs-number">777</span> <span class="hljs-regexp">/data/</span>mydata/output2      <br>sudo mkdir <span class="hljs-regexp">/data/</span>mydata<span class="hljs-regexp">/output3        /</span>/建立output3子目录<br>sudo chmod <span class="hljs-number">777</span> <span class="hljs-regexp">/data/</span>mydata/output3     <br>```  <br>* 将HDFS上的<span class="hljs-regexp">/tj/</span>output1<span class="hljs-regexp">/part-r-00000、/</span>tj<span class="hljs-regexp">/output1/</span>part-r<span class="hljs-number">-00001</span>、<span class="hljs-regexp">/tj/</span>output1<span class="hljs-regexp">/part-r-00002、/</span>tj<span class="hljs-regexp">/output1/</span>part-r<span class="hljs-number">-00003</span>、<span class="hljs-regexp">/tj/</span>output2<span class="hljs-regexp">/part-r-00000、/</span>tj<span class="hljs-regexp">/output3/</span>part-r<span class="hljs-number">-00000</span> 这<span class="hljs-number">6</span>个文件存储到本地Linux的<span class="hljs-regexp">/data/</span>mydata<span class="hljs-regexp">/目录对应的output1/</span><span class="hljs-number">2</span><span class="hljs-regexp">/3子目录下，若此处系统提示“权限不够”的错误，则修改HDFS上/</span>tj目录的访问权限。代码：<br></code></pre></td></tr></table></figure>
+<p>hadoop fs -get /tj/output1/part-r-00000 /data/mydata/output1<br>hadoop fs -get /tj/output1/part-r-00001 /data/mydata/output1<br>hadoop fs -get /tj/output1/part-r-00002 /data/mydata/output1<br>hadoop fs -get /tj/output1/part-r-00003 /data/mydata/output1<br>hadoop fs -get /tj/output1/part-r-00004 /data/mydata/output1<br>hadoop fs -get /tj/output2/part-r-00000 /data/mydata/output2<br>hadoop fs -get /tj/output3/part-r-00000 /data/mydata/output3</p>
+<pre><code class="hljs">👀
+</code></pre></li>
+</ul>
+<p>coding呢需要破釜沉舟，有耐心，遇到问题明确思路，定位问题原因，按照解决思路一步步来，逻辑思维要清醒。👀</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" class="category-chain-item">大数据</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MapReduce/">#MapReduce</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MapReduce程序开发👀</div>
+      <div>https://www.prime.org.cn/2021/08/12/MapReduce程序开发/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>emroy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 12, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/13/Shell/" title="Shell">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Shell</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/26/JS%E7%BB%A7%E6%89%BF%E8%BF%9B%E9%98%B6/" title="JS继承进阶">
+                        <span class="hidden-mobile">JS继承进阶</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":200,"height":400},"mobile":{"show":true},"log":false});</script></body>
+</html>
