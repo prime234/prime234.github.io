@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="emroy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="k-means算法方法概述&amp;emsp;k-means算法以k为参数，把n个对象分成k个簇，使簇内具有较高的相似度，而簇间的相似度较低。 其处理过程如下：  ①　随机选择k个点作为初始的聚类中心；  ②　对于剩下的点，根据其与聚类中心的距离，将其归入最近的簇  ③　对每个簇，计算所有点的均值作为新的聚类中心  ④　重复2、3直到聚类中心不再发生改变 实现过程 导入相关包numpy\matplotl\">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K-Means聚类">
+<meta property="og:url" content="https://www.prime.org.cn/2020/12/10/K-Means%E8%81%9A%E7%B1%BB/index.html">
+<meta property="og:site_name" content="EMROY&#39;S BLOG">
+<meta property="og:description" content="k-means算法方法概述&amp;emsp;k-means算法以k为参数，把n个对象分成k个簇，使簇内具有较高的相似度，而簇间的相似度较低。 其处理过程如下：  ①　随机选择k个点作为初始的聚类中心；  ②　对于剩下的点，根据其与聚类中心的距离，将其归入最近的簇  ③　对每个簇，计算所有点的均值作为新的聚类中心  ④　重复2、3直到聚类中心不再发生改变 实现过程 导入相关包numpy\matplotl\">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms1.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms2.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms3.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms4.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms5.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms6.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms7.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms8.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms9.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms10.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms11.jpg">
+<meta property="article:published_time" content="2020-12-10T12:09:11.000Z">
+<meta property="article:modified_time" content="2021-03-16T12:41:06.000Z">
+<meta property="article:author" content="emroy">
+<meta property="article:tag" content="数据挖掘">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms1.jpg">
+  
+  
+  
+  <title>K-Means聚类 - EMROY&#39;S BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.prime.org.cn","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/totoro.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Emroy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="K-Means聚类"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-12-10 20:09" pubdate>
+          December 10, 2020 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">K-Means聚类</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="k-means算法"><a href="#k-means算法" class="headerlink" title="k-means算法"></a>k-means算法</h3><h4 id="方法概述"><a href="#方法概述" class="headerlink" title="方法概述"></a>方法概述</h4><p>&emsp;k-means算法以k为参数，把n个对象分成k个簇，使簇内具有较高的相似度，而簇间的相似度较低。 其处理过程如下： </p>
+<p>①　随机选择k个点作为初始的聚类中心； </p>
+<p>②　对于剩下的点，根据其与聚类中心的距离，将其归入最近的簇 </p>
+<p>③　对每个簇，计算所有点的均值作为新的聚类中心 </p>
+<p>④　重复2、3直到聚类中心不再发生改变</p>
+<h4 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h4><ol>
+<li>导入相关包numpy\matplotl\math</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> numpy <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><span class="hljs-keyword">from</span> math <span class="hljs-keyword">import</span> sqrt<br><span class="hljs-keyword">from</span> numpy.lib.scimath <span class="hljs-keyword">import</span> power<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>读取数据</li>
+</ol>
+<p>依次遍历数据的每一行，以“,”分割并将数据保存到**数组dataMat[]**中</p>
+<ol start="3">
+<li>向量距离计算</li>
+</ol>
+<p>使用欧式距离计算样本到中心的距离。对于样本 d 维样本 x 到中心 c 的欧式距离计算公式为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms1.jpg" srcset="/img/totoro.gif" lazyload alt="img"> </p>
+<ol start="4">
+<li>构建一个包含k个随机质心的集合</li>
+</ol>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs processing">def <span class="hljs-title function_">randCent</span>(dataSet, k):<br>  n = <span class="hljs-built_in">shape</span>(dataSet)[<span class="hljs-number">1</span>]  <span class="hljs-comment">//数据特征个数(即数据维度)</span><br><span class="hljs-comment">//创建一个0矩阵，其中zeros为创建0填充的数组，mat是转换为矩阵，用于存放k个质心</span><br>  centroids = <span class="hljs-title function_">mat</span>(<span class="hljs-title function_">zeros</span>((k, n)))<br>  <span class="hljs-keyword">for</span> i in <span class="hljs-title function_">range</span>(n):  <span class="hljs-comment">//遍历每个特征</span><br>    minI = <span class="hljs-built_in">min</span>(dataSet[:, i])  <span class="hljs-comment">//获取最小值</span><br>    rangeI = <span class="hljs-built_in">float</span>(<span class="hljs-built_in">max</span>(dataSet[:, i]) - minI)  <span class="hljs-comment">//范围</span><br>    centroids[:, i] = minI + rangeI * <span class="hljs-built_in">random</span>.<span class="hljs-property">rand</span>(k, <span class="hljs-number">1</span>)  <span class="hljs-comment">//最小值+范围*随机数</span><br>  <span class="hljs-keyword">return</span> centroids<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>K均值聚类算法</li>
+</ol>
+<p>dataSet:数据集</p>
+<p>k:簇的个数</p>
+<p>distMeas:距离计算</p>
+<p>createCent:创建k个随机质心</p>
+<p>关于距离计算方式与随机生成k个质心可以选择其他方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">kMeans</span>(<span class="hljs-params">dataSet, k, distMeas=distEclud, createCent=randCent</span>):<br>  m = shape(dataSet)[<span class="hljs-number">0</span>] <span class="hljs-comment"># 数据数目</span><br>  clusterAssment = mat(zeros((m, <span class="hljs-number">2</span>)))  //储存每个点的簇分配结果，第一列记录簇索引，第二列记录误差，误差指当前点到簇质心的距离，可用于评估聚类的效果<br>  centroids = createCent(dataSet, k) //质心生成<br>  clusterChanged = <span class="hljs-literal">True</span> //标记变量，为<span class="hljs-literal">True</span>则继续迭代<br>  <span class="hljs-keyword">while</span> clusterChanged:<br>    clusterChanged = <span class="hljs-literal">False</span><br>//寻找最近的质心<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m): <span class="hljs-comment"># 遍历每个数据</span><br>      minDist = inf <span class="hljs-comment"># 最小距离</span><br>      minIndex = -<span class="hljs-number">1</span> <span class="hljs-comment"># 最小距离的索引</span><br>      <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(k): <span class="hljs-comment"># 遍历每个质心</span><br>        distJI = distMeas(centroids[j, :], dataSet[i, :]) <span class="hljs-comment"># 计算该点到每个质心的距离</span><br>        <span class="hljs-keyword">if</span> distJI &lt; minDist: <span class="hljs-comment"># 与之前的最小距离比较</span><br>          minDist = distJI <span class="hljs-comment"># 更新最小距离</span><br>          minIndex = j <span class="hljs-comment"># 更新最小距离的索引</span><br>      //到此，便得到了该点到哪个质心距离最<br>      <span class="hljs-keyword">if</span> clusterAssment[i, <span class="hljs-number">0</span>] != minIndex: <span class="hljs-comment"># 如果之前记录的簇索引不等于目前最小距离的簇索引</span><br>        clusterChanged = <span class="hljs-literal">True</span> <span class="hljs-comment"># 设置为True，继续遍历，直到簇分配结果不再改变为止</span><br>        clusterAssment[i, :] = minIndex, minDist ** //记录新的簇索引和误差<br>   <span class="hljs-built_in">print</span>(centroids)<br><br>//更新质心的位置<br>    <span class="hljs-keyword">for</span> cent <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(k):<br>     ptsInclust = dataSet[nonzero(clusterAssment[:, <span class="hljs-number">0</span>].A == cent)[<span class="hljs-number">0</span>]] <span class="hljs-comment"># 获取给定簇的所有点</span><br>      clusterAssment[:, <span class="hljs-number">0</span>].A == cent：表示clusterAssment第一列簇索引是否等于当前的簇<br>      nonzero：返回一个元祖，第一个元素为<span class="hljs-literal">True</span>所在的行，第二个元素为<span class="hljs-literal">True</span>所在的列，这里取为行，即取出给定簇的数据<br>      centroids[cent, :] = mean(ptsInclust, axis=<span class="hljs-number">0</span>) <span class="hljs-comment"># 然后计算均值，axis=0沿着列方向</span><br><span class="hljs-keyword">return</span> centroids, clusterAssment <span class="hljs-comment"># 返回质心与点分配结果</span><br><br>//对数据进行可视化展示<br>marker = [<span class="hljs-string">&#x27;s&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;^&#x27;</span>, <span class="hljs-string">&#x27;&lt;&#x27;</span>,<span class="hljs-string">&#x27;&gt;&#x27;</span>,<span class="hljs-string">&#x27;D&#x27;</span>,<span class="hljs-string">&#x27;8&#x27;</span>]  <span class="hljs-comment"># 散点图点的形状</span><br>color = [<span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;m&#x27;</span>, <span class="hljs-string">&#x27;y&#x27;</span>, <span class="hljs-string">&#x27;g&#x27;</span>,<span class="hljs-string">&#x27;c&#x27;</span>,<span class="hljs-string">&#x27;k&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>]  <span class="hljs-comment"># 颜色X = np.array(datMat)  # 数据点</span><br>CentX = np.array(myCentroids)  <span class="hljs-comment"># 质心点</span><br>Cents = np.array(clusterAssing[:, <span class="hljs-number">0</span>])  <span class="hljs-comment"># 每个数据点对应的簇</span><br><span class="hljs-keyword">for</span> i, Centroid <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(Cents):  <span class="hljs-comment"># 遍历每个数据对应的簇，返回数据的索引即其对应的簇</span><br>  plt.scatter(X[i][<span class="hljs-number">0</span>], X[i][<span class="hljs-number">1</span>], marker=marker[<span class="hljs-built_in">int</span>(Centroid[<span class="hljs-number">0</span>])], c=color[<span class="hljs-built_in">int</span>(Centroid[<span class="hljs-number">0</span>])])  <span class="hljs-comment"># 按簇画数据点</span><br>plt.scatter(CentX[:, <span class="hljs-number">0</span>], CentX[:, <span class="hljs-number">1</span>], marker=<span class="hljs-string">&#x27;*&#x27;</span>, c=<span class="hljs-string">&#x27;r&#x27;</span>)  <span class="hljs-comment"># 画质心</span><br><br>plt.show()<br></code></pre></td></tr></table></figure>
+
+<p>调参的参数仅仅是簇数k取不同k值，观察结果:</p>
+<ol>
+<li>聚成两类：<img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms2.jpg" srcset="/img/totoro.gif" lazyload alt="img"></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms3.jpg" srcset="/img/totoro.gif" lazyload alt="img"> </p>
+<ol start="2">
+<li>聚成三类：<img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms4.jpg" srcset="/img/totoro.gif" lazyload alt="img"></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms5.jpg" srcset="/img/totoro.gif" lazyload alt="img"> </p>
+<ol start="3">
+<li>聚成四类：<img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms6.jpg" srcset="/img/totoro.gif" lazyload alt="img"></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms7.jpg" srcset="/img/totoro.gif" lazyload alt="img"> </p>
+<ol start="4">
+<li>聚成五类</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms8.jpg" srcset="/img/totoro.gif" lazyload alt="img"> </p>
+<ol start="5">
+<li>聚成六类</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms9.jpg" srcset="/img/totoro.gif" lazyload alt="img"> </p>
+<ol start="6">
+<li>聚成7类</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms10.jpg" srcset="/img/totoro.gif" lazyload alt="img"> </p>
+<ol start="7">
+<li>设置簇的个数为8，观察发现数据还是分成7类，且分类效果并不好，有些数据密切分布。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/kms11.jpg" srcset="/img/totoro.gif" lazyload alt="img"> </p>
+<p>综上，可以看到分类效果最好的是聚成7类，k的取值应为7。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><p>K-Means的主要优点有：<br> - 原理比较简单，实现也是很容易，收敛速度快。<br> - 聚类效果较优。<br> - 算法的可解释度比较强。<br> - 主要需要调参的参数仅仅是簇数k。</p>
+</li>
+<li><p>K-Means的主要缺点有：<br> - K值的选取不好把握(改进：可以通过在一开始给定一个适合的数值给k，通过一次K-means算法得到一次聚类中心。对于得到的聚类中心，根据得到的k个聚类的距离情况，合并距离最近的类，因此聚类中心数减小，当将其用于下次聚类时，相应的聚类数目也减小了，最终得到合适数目的聚类数。可以通过一个评判值E来确定聚类数得到一个合适的位置停下来，而不继续合并聚类中心。重复上述循环，直至评判函数收敛为止，最终得到较优聚类数的聚类结果)。<br>     - 对于不是凸的数据集比较难收敛(改进：基于密度的聚类算法更加适合，比如DBSCAN算法)<br>     - 如果各隐含类别的数据不平衡，比如各隐含类别的数据量严重失衡，或者各隐含类别的方差不同，则聚类效果不佳。<br>     - 采用迭代方法，得到的结果只是局部最优。<br>     - 对噪音和异常点比较的敏感(改进1：离群点检测的LOF算法，通过去除离群点后再聚类，可以减少离群点和孤立点对于聚类效果的影响；改进2：改成求点的中位数，这种聚类方式即K-Mediods聚类（K中值）)。<br>     - 初始聚类中心的选择(改进1：k-means++;改进2：二分K-means）</p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/" class="print-no-link">#数据挖掘</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>K-Means聚类</div>
+      <div>https://www.prime.org.cn/2020/12/10/K-Means聚类/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>emroy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 10, 2020</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/01/01/%E5%BE%AE%E8%A7%822020/" title="微观2020🤗">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">微观2020🤗</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/25/JavaScript%E5%9F%BA%E7%9F%B3/" title="JavaScript基石">
+                        <span class="hidden-mobile">JavaScript基石</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":175,"height":200},"mobile":{"show":true},"log":false});</script></body>
+</html>

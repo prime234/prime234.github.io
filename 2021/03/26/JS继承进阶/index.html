@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="emroy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="方法的基本介绍new 原理介绍new 关键词的主要作用就是执行一个构造函数、返回一个实例对象，在 new 的过程中，根据构造函数的情况，来确定是否可以接受参数的传递。下面我们通过一段代码来看一个简单的 new 的例子。 12345function Person()&amp;#123;   this.name &#x3D; &amp;#x27;Jack&amp;#x27;;&amp;#125;var p &#x3D; new Person(); co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS继承进阶">
+<meta property="og:url" content="https://www.prime.org.cn/2021/03/26/JS%E7%BB%A7%E6%89%BF%E8%BF%9B%E9%98%B6/index.html">
+<meta property="og:site_name" content="EMROY&#39;S BLOG">
+<meta property="og:description" content="方法的基本介绍new 原理介绍new 关键词的主要作用就是执行一个构造函数、返回一个实例对象，在 new 的过程中，根据构造函数的情况，来确定是否可以接受参数的传递。下面我们通过一段代码来看一个简单的 new 的例子。 12345function Person()&amp;#123;   this.name &#x3D; &amp;#x27;Jack&amp;#x27;;&amp;#125;var p &#x3D; new Person(); co">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js19.png">
+<meta property="article:published_time" content="2021-03-26T12:54:51.000Z">
+<meta property="article:modified_time" content="2021-03-26T14:21:00.000Z">
+<meta property="article:author" content="emroy">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js19.png">
+  
+  
+  
+  <title>JS继承进阶 - EMROY&#39;S BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.prime.org.cn","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/totoro.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Emroy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JS继承进阶"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-03-26 20:54" pubdate>
+          March 26, 2021 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JS继承进阶</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="方法的基本介绍"><a href="#方法的基本介绍" class="headerlink" title="方法的基本介绍"></a>方法的基本介绍</h3><h4 id="new-原理介绍"><a href="#new-原理介绍" class="headerlink" title="new 原理介绍"></a>new 原理介绍</h4><p>new 关键词的主要作用就是<strong>执行一个构造函数、返回一个实例对象</strong>，在 new 的过程中，根据构造函数的情况，来确定是否可以接受参数的传递。下面我们通过一段代码来看一个简单的 new 的例子。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params"></span>)&#123;<br>   this.name = <span class="hljs-string">&#x27;Jack&#x27;</span>;<br>&#125;<br><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> Person(); <br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(p.name)  <span class="hljs-comment">// Jack</span><br></code></pre></td></tr></table></figure>
+
+<p>从输出结果可以看出，p 是一个通过 person 这个构造函数生成的一个实例对象。那么 new 在这个生成实例的过程中到底进行了哪些步骤来实现呢？总结下来大致分为以下几个步骤。</p>
+<ol>
+<li>创建一个新对象；</li>
+<li>将构造函数的作用域赋给新对象（this 指向新对象）；</li>
+<li>执行构造函数中的代码（为这个新对象添加属性）；</li>
+<li>返回新对象。</li>
+</ol>
+<p>那么问题来了，如果不用 new 这个关键词，结合上面的代码改造一下，去掉 new，会发生什么样的变化呢？我们再来看下面这段代码。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params"></span>)&#123;<br>  this.name = <span class="hljs-string">&#x27;Jack&#x27;</span>;<br>&#125;<br><span class="hljs-keyword">var</span> p = Person();<br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(p) <span class="hljs-comment">// undefined</span><br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(name) <span class="hljs-comment">// Jack</span><br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(p.name) <span class="hljs-comment">// &#x27;name&#x27; of undefined</span><br></code></pre></td></tr></table></figure>
+
+<p>从上面的代码中没有使用 new 这个关键词，返回的结果就是 undefined。其中由于 JavaScript 代码在默认情况下 this 的指向是 window，那么 name 的输出结果就为 Jack，这是一种不存在 new 关键词的情况。</p>
+<p>那么当构造函数中有 return 一个对象的操作，结果又会是什么样子呢？再来看一段在上面的基础上改造过的代码。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params"></span>)&#123;<br>   this.name = <span class="hljs-string">&#x27;Jack&#x27;</span>; <br>   <span class="hljs-keyword">return</span> &#123;<span class="hljs-attr">age</span>: <span class="hljs-number">18</span>&#125;<br>&#125;<br><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> Person(); <br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(p)  <span class="hljs-comment">// &#123;age: 18&#125;</span><br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(p.name) <span class="hljs-comment">// undefined</span><br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(p.age) <span class="hljs-comment">// 18</span><br></code></pre></td></tr></table></figure>
+
+<p>通过这段代码又可以看出，当构造函数最后 return 出来的是一个和 this 无关的对象时，new 命令会直接返回这个新对象，而不是通过 new 执行步骤生成的 this 对象。</p>
+<p>但是这里要求构造函数必须是返回一个对象，如果返回的不是对象，那么还是会按照 new 的实现步骤，返回新生成的对象。接下来还是在上面这段代码的基础之上稍微改动一下。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Person</span>(<span class="hljs-params"></span>)&#123;<br>   this.name = <span class="hljs-string">&#x27;Jack&#x27;</span>; <br>   <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;tom&#x27;</span>;<br>&#125;<br><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> Person(); <br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(p)  <span class="hljs-comment">// &#123;name: &#x27;Jack&#x27;&#125;</span><br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(p.name) <span class="hljs-comment">// Jack</span><br></code></pre></td></tr></table></figure>
+
+<p>可以看出，当构造函数中 return 的不是一个对象时，那么它还是会根据 new 关键词的执行逻辑，生成一个新的对象（绑定了最新 this），最后返回出来。</p>
+<p>总结一下：<em><strong>new 关键词执行之后总是会返回一个对象，要么是实例对象，要么是 return 语句指定的对象。</strong></em></p>
+<h4 id="apply-call-bind-原理介绍"><a href="#apply-call-bind-原理介绍" class="headerlink" title="apply &amp; call &amp; bind 原理介绍"></a>apply &amp; call &amp; bind 原理介绍</h4><p>先来了解一下这三个方法的基本情况，<strong>call、apply 和 bind 是挂在 Function 对象上的三个方法，调用这三个方法的必须是一个函数。</strong></p>
+<p>请看这三个函数的基本语法。</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs autoit"><span class="hljs-keyword">func</span>.<span class="hljs-built_in">call</span>(thisArg, param1, param2, ...)<br><span class="hljs-keyword">func</span>.apply(thisArg, [param1,param2,...])<br><span class="hljs-keyword">func</span>.bind(thisArg, param1, param2, ...)<br></code></pre></td></tr></table></figure>
+
+
+<p>其中 func 是要调用的函数，thisArg 一般为 this 所指向的对象，后面的 param1、2 为函数 func 的多个参数，如果 func 不需要参数，则后面的 param1、2 可以不写。</p>
+<p><strong>这三个方法共有的、比较明显的作用就是，都可以改变函数 func 的 this 指向。call 和 apply 的区别在于，传参的写法不同：apply 的第 2 个参数为数组； call 则是从第 2 个至第 N 个都是给 func 的传参；而 bind 和这两个（call、apply）又不同，bind 虽然改变了 func 的 this 指向，但不是马上执行，而这两个（call、apply）是在改变了函数的 this 指向之后立马执行。</strong></p>
+<p>几个方法的区别和原理总结了但是理解起来，嗯。。。很抽象！举个形象的例子再配合着代码看下。</p>
+<p>例如，生活中我不经常做饭，家里没有锅，周末突然想给自己做个饭尝尝。但是家里没有锅，而我又不想出去买，所以就问隔壁邻居借了一个锅来用，这样做了饭，又节省了开销，一举两得。</p>
+<p>对应在程序中：A 对象有个 getName 的方法，B 对象也需要临时使用同样的方法，那么这时候我们是单独为 B 对象扩展一个方法，还是借用一下 A 对象的方法呢？当然是可以借用 A 对象的 getName 方法，既达到了目的，又节省重复定义，节约内存空间。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs arcade">let a = &#123;<br>  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;jack&#x27;</span>,<br>  <span class="hljs-attr">getName</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">msg</span>) &#123;<br>    <span class="hljs-keyword">return</span> msg + this.name;<br>  &#125; <br>&#125;<br>let b = &#123;<br>  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;lily&#x27;</span><br>&#125;<br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(a.getName(<span class="hljs-string">&#x27;hello~&#x27;</span>));  <span class="hljs-comment">// hello~jack</span><br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(a.getName.call(b, <span class="hljs-string">&#x27;hi~&#x27;</span>));  <span class="hljs-comment">// hi~lily</span><br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(a.getName.apply(b, [<span class="hljs-string">&#x27;hi~&#x27;</span>]))  <span class="hljs-comment">// hi~lily</span><br>let name = a.getName.bind(b, <span class="hljs-string">&#x27;hello~&#x27;</span>);<br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(name());  <span class="hljs-comment">// hello~lily</span><br></code></pre></td></tr></table></figure>
+
+<p>从上面的代码执行的结果中可以发现，使用这三种方式都可以达成我们想要的目标，即通过改变 this 的指向，让 b 对象可以直接使用 a 对象中的 getName 方法。从结果中可以看到，最后三个方法输出的都是和 lily 相关的打印结果，满足预期。</p>
+<h5 id="方法的应用场景"><a href="#方法的应用场景" class="headerlink" title="方法的应用场景"></a>方法的应用场景</h5><p>下面几种应用场景，你多加体会就可以发现它们的理念都是“借用”方法的思路。我们来看看都有哪些。</p>
+<h6 id="判断数据类型"><a href="#判断数据类型" class="headerlink" title="判断数据类型"></a>判断数据类型</h6><p>用 Object.prototype.toString 来判断类型是最合适的，借用它几乎可以判断所有类型的数据。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">getType</span>(<span class="hljs-params">obj</span>)&#123;<br>  <span class="hljs-keyword">let</span> <span class="hljs-keyword">type</span>  = <span class="hljs-keyword">typeof</span> obj;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">type</span> !== <span class="hljs-string">&quot;object&quot;</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">type</span>;<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(obj).<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/^$/</span>, <span class="hljs-string">&#x27;$1&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>结合上面这段代码，以及在前面讲的 call 的方法的 “借用” 思路，那么判断数据类型就是借用了 Object 的原型链上的 toString 方法，最后返回用来判断传入的 obj 的字符串，来确定最后的数据类型。</p>
+<h6 id="类数组借用方法"><a href="#类数组借用方法" class="headerlink" title="类数组借用方法"></a>类数组借用方法</h6><p>类数组相关知识我会在第二个模块“深入数组”中详细介绍，这里先简单说一下，类数组因为不是真正的数组，所有没有数组类型上自带的种种方法，所以我们就可以利用一些方法去借用数组的方法，比如借用数组的 push 方法，看下面的一段代码。</p>
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sas">var arrayLike = &#123; <br>  0: <span class="hljs-string">&#x27;java&#x27;</span>,<br>  1: <span class="hljs-string">&#x27;script&#x27;</span>,<br>  <span class="hljs-keyword">length</span>: 2<br>&#125; <br><span class="hljs-keyword">Array</span>.prototype.push.<span class="hljs-keyword">call</span>(arrayLike, <span class="hljs-string">&#x27;jack&#x27;</span>, <span class="hljs-string">&#x27;lily&#x27;</span>); <br>console.<span class="hljs-meta">log</span>(typeof arrayLike); // <span class="hljs-string">&#x27;object&#x27;</span><br>console.<span class="hljs-meta">log</span>(arrayLike);<br>// &#123;0: <span class="hljs-string">&quot;java&quot;</span>, 1: <span class="hljs-string">&quot;script&quot;</span>, 2: <span class="hljs-string">&quot;jack&quot;</span>, 3: <span class="hljs-string">&quot;lily&quot;</span>, <span class="hljs-keyword">length</span>: 4&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从上面的代码可以看到，arrayLike 是一个对象，模拟数组的一个类数组。从数据类型上看，它是一个对象。从上面的代码中可以看出，用 typeof 来判断输出的是 ‘object’，它自身是不会有数组的 push 方法的，这里我们就用 call 的方法来借用 Array 原型链上的 push 方法，可以实现一个类数组的 push 方法，给 arrayLike 添加新的元素。</p>
+<p>从上面的控制台可以看出，push 满足了我们想要实现添加元素的诉求。</p>
+<h6 id="获取数组的最大-最小值"><a href="#获取数组的最大-最小值" class="headerlink" title="获取数组的最大 &#x2F; 最小值"></a>获取数组的最大 &#x2F; 最小值</h6><p>可以用 apply 来实现数组中判断最大 &#x2F; 最小值，apply 直接传递数组作为调用方法的参数，也可以减少一步展开数组，可以直接使用 Math.max、Math.min 来获取数组的最大值 &#x2F; 最小值，请看下面这段代码。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs arduino">let arr = [<span class="hljs-number">13</span>, <span class="hljs-number">6</span>, <span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-number">16</span>];<br><span class="hljs-type">const</span> max = Math.max.<span class="hljs-built_in">apply</span>(Math, arr); <br><span class="hljs-type">const</span> min = Math.min.<span class="hljs-built_in">apply</span>(Math, arr);<br><br>console.<span class="hljs-built_in">log</span>(max);  <span class="hljs-comment">// 16</span><br>console.<span class="hljs-built_in">log</span>(min);  <span class="hljs-comment">// 6</span><br></code></pre></td></tr></table></figure>
+
+<h6 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h6><p>我们在上一讲中说到了继承，它与 new、call 共同实现了各种各样的继承方式。那么下面我们结合着这一讲的内容再来回顾一下组合继承方式，代码如下。</p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs qml">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent3</span> (<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">this</span>.name = <span class="hljs-string">&#x27;parent3&#x27;</span>;<br>    <span class="hljs-keyword">this</span>.play = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>  &#125;<br><br><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">13</span>, <span class="hljs-number">6</span>, <span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-number">16</span>];<br><span class="hljs-keyword">const</span> max = <span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-built_in">Math</span>, arr); <br><span class="hljs-keyword">const</span> min = <span class="hljs-built_in">Math</span>.min.apply(<span class="hljs-built_in">Math</span>, arr);<br><br><span class="hljs-built_in">console</span>.log(max);  <span class="hljs-comment">// 16</span><br><span class="hljs-built_in">console</span>.log(min);  <span class="hljs-comment">// 6</span><br><br><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">13</span>, <span class="hljs-number">6</span>, <span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-number">16</span>];<br><span class="hljs-keyword">const</span> max = <span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-built_in">Math</span>, arr); <br><span class="hljs-keyword">const</span> min = <span class="hljs-built_in">Math</span>.min.apply(<span class="hljs-built_in">Math</span>, arr);<br></code></pre></td></tr></table></figure>
+
+<p>继承<br>我们在上一讲中说到了继承，它与 new、call 共同实现了各种各样的继承方式。那么下面我们结合着这一讲的内容再来回顾一下组合继承方式，代码如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent3</span> () &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent3&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br><br><span class="hljs-title class_">Parent3</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getName</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child3</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title class_">Parent3</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child3&#x27;</span>;<br>&#125;<br><br><span class="hljs-title class_">Child3</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent3</span>();<br><span class="hljs-title class_">Child3</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">Child3</span>;<br><span class="hljs-keyword">var</span> s3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child3</span>();<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s3.<span class="hljs-title function_">getName</span>());  <span class="hljs-comment">// &#x27;parent3&#x27;</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="方法的实现"><a href="#方法的实现" class="headerlink" title="方法的实现"></a>方法的实现</h4><h5 id="new的实现"><a href="#new的实现" class="headerlink" title="new的实现"></a>new的实现</h5><p>执行 new 的过程中，new 被调用后大致做了哪几件事情。</p>
+<ol>
+<li>让实例可以访问到私有属性；</li>
+<li>让实例可以访问构造函数原型（constructor.prototype）所在原型链上的属性；</li>
+<li>构造函数返回的最后结果是引用数据类型。</li>
+</ol>
+<p>那么请你思考一下，自己实现 new 的代码应该如何写呢？下面我给你一个思路。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">_new</span>(<span class="hljs-params">ctor, ...args</span>) &#123;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> ctor !== <span class="hljs-string">&#x27;function&#x27;</span>) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-string">&#x27;ctor must be a function&#x27;</span>;<br>    &#125;<br>    <span class="hljs-keyword">let</span> obj = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>();<br>    obj.<span class="hljs-property">__proto__</span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(ctor.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);<br>    <span class="hljs-keyword">let</span> res = ctor.<span class="hljs-title function_">apply</span>(obj,  [...args]);<br><br>    <span class="hljs-keyword">let</span> isObject = <span class="hljs-keyword">typeof</span> res === <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; res !== <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">let</span> isFunction = <span class="hljs-keyword">typeof</span> res === <span class="hljs-string">&#x27;function&#x27;</span>;<br>    <span class="hljs-keyword">return</span> isObject || isFunction ? res : obj;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>接下来我们再看看 apply 和 call 的实现方法。</p>
+<h5 id="apply-和-call-的实现"><a href="#apply-和-call-的实现" class="headerlink" title="apply 和 call 的实现"></a>apply 和 call 的实现</h5><p>由于 apply 和 call 基本原理是差不多的，只是参数存在区别，因此我们将这两个的实现方法放在一起讲。</p>
+<p>依然是结合方法“借用”的原理，我们一起来思考一下这两个方法如何实现，请看下面实现的代码。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">Function.prototype.call = <span class="hljs-keyword">function</span> <span class="hljs-params">(context, <span class="hljs-rest_arg">...args</span>)</span> &#123;<br>  <span class="hljs-keyword">var</span> context = context || window;<br>  context.fn = <span class="hljs-keyword">this</span>;<br>  <span class="hljs-keyword">var</span> result = eval(<span class="hljs-string">&#x27;context.fn(...args)&#x27;</span>);<br>  <span class="hljs-keyword">delete</span> context.fn<br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br>Function.prototype.apply = <span class="hljs-keyword">function</span> <span class="hljs-params">(context, args)</span> &#123;<br>  let context = context || window;<br>  context.fn = <span class="hljs-keyword">this</span>;<br>  let result = eval(<span class="hljs-string">&#x27;context.fn(...args)&#x27;</span>);<br>  <span class="hljs-keyword">delete</span> context.fn<br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从上面的代码可以看出，实现 call 和 apply 的关键就在 eval 这行代码。其中显示了用 context 这个临时变量来指定上下文，然后还是通过执行 eval 来执行 context.fn 这个函数，最后返回 result。</p>
+<p><strong>要注意这两个方法和 bind 的区别就在于，这两个方法是直接返回执行结果，而 bind 方法是返回一个函数，因此这里直接用 eval 执行得到结果。</strong></p>
+<h5 id="bind-的实现"><a href="#bind-的实现" class="headerlink" title="bind 的实现"></a>bind 的实现</h5><p> 结合上面两个方法的实现，bind 的实现思路基本和 apply 一样，但是在最后实现返回结果这里，bind 和 apply 有着比较大的差异，bind 不需要直接执行，因此不再需要用 eval ，而是需要通过返回一个函数的方式将结果返回，之后再通过执行这个结果，得到想要的执行效果。</p>
+<p>那么，结合这个思路，我们看下 bind 这个方法的底层逻辑实现的代码是什么样的，如下所示。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">Function.prototype.bind = <span class="hljs-keyword">function</span> <span class="hljs-params">(context, <span class="hljs-rest_arg">...args</span>)</span> &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span> !== <span class="hljs-string">&quot;function&quot;</span>) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">&quot;this must be a function&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;<br>    <span class="hljs-keyword">var</span> fbound = <span class="hljs-keyword">function</span> <span class="hljs-params">()</span> &#123;<br>        self.apply(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> self ? <span class="hljs-keyword">this</span> : context, args.concat(Array.prototype.slice.call(arguments)));<br>    &#125;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.prototype) &#123;<br>      fbound.prototype = Object.create(<span class="hljs-keyword">this</span>.prototype);<br>    &#125;<br>    <span class="hljs-keyword">return</span> fbound;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从上面的代码中可以看到，<strong>实现 bind 的核心在于返回的时候需要返回一个函数</strong>，故这里的 fbound 需要返回，但是在返回的过程中原型链对象上的属性不能丢失。因此这里需要用Object.create 方法，将 this.prototype 上面的属性挂到 fbound 的原型上面，最后再返回 fbound。这样调用 bind 方法接收到函数的对象，再通过执行接收的函数，即可得到想要的结果。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js19.png" srcset="/img/totoro.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%89%8D%E7%AB%AF/" class="print-no-link">#前端</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JS继承进阶</div>
+      <div>https://www.prime.org.cn/2021/03/26/JS继承进阶/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>emroy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 26, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/12/MapReduce%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/" title="MapReduce程序开发👀">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MapReduce程序开发👀</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/26/JS6%E7%A7%8D%E7%BB%A7%E6%89%BF%E6%96%B9%E5%BC%8F/" title="JS6种继承方式">
+                        <span class="hidden-mobile">JS6种继承方式</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":175,"height":200},"mobile":{"show":true},"log":false});</script></body>
+</html>

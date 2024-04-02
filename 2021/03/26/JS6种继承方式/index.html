@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="emroy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="继承实现继承的概念：继承是面向对象的，使用这种方式我们可以更好地复用之前开发的代码，缩短开发周期，提升开发效率。 经典例子：定义一个经典的Class叫汽车，属性包括：颜色、轮胎、品牌、速度、排气量等，由汽车派生出两个类“轿车”和“货车”。在汽车的基础属性上为轿车增加一个后备箱，给货车添加大货箱，他们同属汽车这一类，但是不一样，这就是一个继承的关系。 继承可以使子类具有父类的各种属性和方法，也可以重">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS6种继承方式">
+<meta property="og:url" content="https://www.prime.org.cn/2021/03/26/JS6%E7%A7%8D%E7%BB%A7%E6%89%BF%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="EMROY&#39;S BLOG">
+<meta property="og:description" content="继承实现继承的概念：继承是面向对象的，使用这种方式我们可以更好地复用之前开发的代码，缩短开发周期，提升开发效率。 经典例子：定义一个经典的Class叫汽车，属性包括：颜色、轮胎、品牌、速度、排气量等，由汽车派生出两个类“轿车”和“货车”。在汽车的基础属性上为轿车增加一个后备箱，给货车添加大货箱，他们同属汽车这一类，但是不一样，这就是一个继承的关系。 继承可以使子类具有父类的各种属性和方法，也可以重">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js10.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js11.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js14.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js15_LI.jpg">
+<meta property="article:published_time" content="2021-03-26T00:53:07.000Z">
+<meta property="article:modified_time" content="2021-03-26T14:26:24.000Z">
+<meta property="article:author" content="emroy">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js6.png">
+  
+  
+  
+  <title>JS6种继承方式 - EMROY&#39;S BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.prime.org.cn","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/totoro.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Emroy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JS6种继承方式"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-03-26 08:53" pubdate>
+          March 26, 2021 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JS6种继承方式</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="继承实现"><a href="#继承实现" class="headerlink" title="继承实现"></a>继承实现</h2><p>继承的概念：继承是面向对象的，使用这种方式我们可以更好地复用之前开发的代码，缩短开发周期，提升开发效率。</p>
+<p>经典例子：定义一个经典的Class叫汽车，属性包括：颜色、轮胎、品牌、速度、排气量等，由汽车派生出两个类“轿车”和“货车”。在汽车的基础属性上为轿车增加一个后备箱，给货车添加大货箱，他们同属汽车这一类，但是不一样，这就是一个继承的关系。</p>
+<p><em><strong>继承可以使子类具有父类的各种属性和方法，也可以重新定义子类的某些属性，并重写或覆盖某些属性和方法，使其获得与父类不同的属性和方法。</strong></em></p>
+<h3 id="JS实现继承的几种方式"><a href="#JS实现继承的几种方式" class="headerlink" title="JS实现继承的几种方式"></a>JS实现继承的几种方式</h3><h4 id="第一种：原型链继承"><a href="#第一种：原型链继承" class="headerlink" title="第一种：原型链继承"></a>第一种：原型链继承</h4><p>原型链继承涉及到的构造函数、原型和实例三者之间含有一定的关系：<strong>每一个构造函数都有一个原型对象，原型对象又包含一个指向构造函数的指针，而实例则包含一个原型对象的指针。</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript">  <span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent1</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent1&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child1</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child2&#x27;</span>;<br>&#125;<br><br><span class="hljs-title class_">Child1</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent1</span>();<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Child1</span>());<br><br><span class="hljs-keyword">var</span> s1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child1</span>();<br><span class="hljs-keyword">var</span> s2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child1</span>();<br>s1.<span class="hljs-property">play</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">4</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s1.<span class="hljs-property">play</span>, s2.<span class="hljs-property">play</span>);<br><br></code></pre></td></tr></table></figure>
+
+<p>代码看似没有问题，虽然父类的方法和属性都能够访问，但其实有一个潜在的问题</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-keyword">var</span> s1 = <span class="hljs-keyword">new</span> Child1();<br><span class="hljs-keyword">var</span> s2 = <span class="hljs-keyword">new</span> Child1();<br>s1.play.<span class="hljs-built_in">push</span>(<span class="hljs-number">4</span>);<br><span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(s1.play, s2.play);<br></code></pre></td></tr></table></figure>
+
+<p>控制台执行：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js6.png" srcset="/img/totoro.gif" lazyload></p>
+<p>明明只改变了 s1 的 play 属性，为什么 s2 也跟着变了呢？原因是因为<strong>两个实例使用的是同一个原型对象。它们的内存空间是共享的，当一个发生变化的时候，另外一个也随之进行了变化，这就是使用原型链继承方式的一个缺点。</strong></p>
+<p>要解决这个问题的话，我们就得再看看其他的继承方式来解决原型属性共享问题。</p>
+<h4 id="第二种：构造函数继承（借助Call"><a href="#第二种：构造函数继承（借助Call" class="headerlink" title="第二种：构造函数继承（借助Call)"></a>第二种：构造函数继承（借助Call)</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent1</span>(<span class="hljs-params"></span>)&#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent1&#x27;</span>;<br>&#125;<br><br><span class="hljs-title class_">Parent1</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getName</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child1</span>(<span class="hljs-params"></span>)&#123;<br>  <span class="hljs-title class_">Parent1</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child1&#x27;</span><br>&#125;<br><br><span class="hljs-keyword">let</span> child = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child1</span>();<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child);  <span class="hljs-comment">// 没问题</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child.<span class="hljs-title function_">getName</span>());  <span class="hljs-comment">// 会报错</span><br><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js7.png" srcset="/img/totoro.gif" lazyload></p>
+<p> 打印的child 在控制台显示，除了 Child1 的属性 type 之外，也继承了 Parent1 的属性 name。这样写的时候子类虽然能够拿到父类的属性值，解决了第一种继承方式的弊端，但问题是，父类原型对象中一旦存在父类之前自己定义的方法，那么子类将无法继承这些方法。</p>
+<p><em><strong>构造函数实现继承的优缺点，它使父类的引用属性不会被共享，优化了第一种继承方式的弊端；但是随之而来的缺点也比较明显——只能继承父类的实例属性和方法，不能继承原型属性或者方法。</strong></em></p>
+<h4 id="第三种：组合继承（前两种结合）"><a href="#第三种：组合继承（前两种结合）" class="headerlink" title="第三种：组合继承（前两种结合）"></a>第三种：组合继承（前两种结合）</h4><p>这种方式结合了前两种继承方式的优缺点，结合起来的继承，代码如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent3</span> () &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent3&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br><br><span class="hljs-title class_">Parent3</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getName</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child3</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">// 第二次调用 Parent3()</span><br>  <span class="hljs-title class_">Parent3</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;child3&#x27;</span>;<br>&#125;<br><br><span class="hljs-comment">// 第一次调用 Parent3()</span><br><span class="hljs-title class_">Child3</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Parent3</span>();<br><span class="hljs-comment">// 手动挂上构造器，指向自己的构造函数</span><br><span class="hljs-title class_">Child3</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">Child3</span>;<br><span class="hljs-keyword">var</span> s3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child3</span>();<br><span class="hljs-keyword">var</span> s4 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child3</span>();<br>s3.<span class="hljs-property">play</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">4</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s3.<span class="hljs-property">play</span>, s4.<span class="hljs-property">play</span>);  <span class="hljs-comment">// 不互相影响</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s3.<span class="hljs-title function_">getName</span>()); <span class="hljs-comment">// 正常输出&#x27;parent3&#x27;</span><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(s4.<span class="hljs-title function_">getName</span>()); <span class="hljs-comment">// 正常输出&#x27;parent3&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>执行上面的代码，可以看到控制台的输出结果，之前方法一和方法二的问题都得以解决。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js8.png" srcset="/img/totoro.gif" lazyload></p>
+<p>但是这里又增加了一个新问题：通过注释我们可以看到 Parent3 执行了两次，第一次是改变Child3 的 prototype 的时候，第二次是通过 call 方法调用 Parent3 的时候，那么 Parent3 多构造一次就多进行了一次性能开销，这是我们不愿看到的。</p>
+<p>那么是否有更好的办法解决这个问题呢？第六种继承方式可以更好地解决这里的问题。</p>
+<p>上面的更多是围绕着构造函数的方式，那么对于 JavaScript 的普通对象</p>
+<h4 id="第四种：原型式继承"><a href="#第四种：原型式继承" class="headerlink" title="第四种：原型式继承"></a>第四种：原型式继承</h4><p>这里不得不提到的就是 ES5 里面的 Object.create 方法，这个方法接收两个参数：一是用作新对象原型的对象、二是为新对象定义额外属性的对象（可选参数）。</p>
+<p>通过这段代码看看普通对象是怎么实现的继承。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">let parent4 = &#123;<br>  <span class="hljs-type">name</span>: &quot;parent4&quot;,<br>  friends: [&quot;p1&quot;, &quot;p2&quot;, &quot;p3&quot;],<br>  getName: <span class="hljs-keyword">function</span>() &#123;<br>    <span class="hljs-keyword">return</span> this.name;<br>  &#125;<br>&#125;;<br><br>let person4 = <span class="hljs-keyword">Object</span>.<span class="hljs-keyword">create</span>(parent4);<br>person4.name = &quot;tom&quot;;<br>person4.friends.push(&quot;jerry&quot;);<br><br>let person5 = <span class="hljs-keyword">Object</span>.<span class="hljs-keyword">create</span>(parent4);<br>person5.friends.push(&quot;lucy&quot;);<br><br>console.log(person4.name);<br>console.log(person4.name === person4.getName());<br>console.log(person5.name);<br>console.log(person4.friends);<br>console.log(person5.friends);<br></code></pre></td></tr></table></figure>
+
+<p>从上面的代码中可以看到，通过 Object.create 这个方法可以实现普通对象的继承，不仅仅能继承属性，同样也可以继承 getName 的方法。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js10.png" srcset="/img/totoro.gif" lazyload></p>
+<p>第一个结果“tom”，person4 继承了 parent4 的 name 属性，但是在这个基础上又进行了自定义。</p>
+<p>第二个是继承过来的 getName 方法检查自己的 name 是否和属性里面的值一样，答案是 true。</p>
+<p>第三个结果“parent4”，person5 继承了 parent4 的 name 属性，没有进行覆盖，因此输出父对象的属性。</p>
+<p>最后两个输出结果是一样，这里可以联想到 浅拷贝的知识点，关于引用数据类型“共享”的问题，其实 Object.create 方法是可以为一些对象实现浅拷贝的。</p>
+<p>这种继承方式的缺点也很明显，<em><strong>多个实例的引用类型属性指向相同的内存，存在篡改的可能</strong></em>。另一种继承方式——寄生式继承在这个继承基础上进行优化。</p>
+<h4 id="第五种：寄生式继承"><a href="#第五种：寄生式继承" class="headerlink" title="第五种：寄生式继承"></a>第五种：寄生式继承</h4><p>使用原型式继承可以获得一份目标对象的浅拷贝，然后利用这个浅拷贝的能力再进行增强，添加一些方法，这样的继承方式就叫作寄生式继承。</p>
+<p>虽然其优缺点和原型式继承一样，但是对于普通对象的继承方式来说，寄生式继承相比于原型式继承，还是在父类基础上添加了更多的方法。看一下代码是怎么实现。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs javascript"> <span class="hljs-keyword">let</span> parent5 = &#123;<br>  <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;parent5&quot;</span>,<br>  <span class="hljs-attr">friends</span>: [<span class="hljs-string">&quot;p1&quot;</span>, <span class="hljs-string">&quot;p2&quot;</span>, <span class="hljs-string">&quot;p3&quot;</span>],<br>  <span class="hljs-attr">getName</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;<br>  &#125;<br>&#125;;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">clone</span>(<span class="hljs-params">original</span>) &#123;<br>  <span class="hljs-keyword">let</span> clone = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(original);<br>  clone.<span class="hljs-property">getFriends</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">friends</span>;<br>  &#125;;<br>  <span class="hljs-keyword">return</span> clone;<br>&#125;<br><br><span class="hljs-keyword">let</span> person5 = <span class="hljs-title function_">clone</span>(parent5);<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(person5.<span class="hljs-title function_">getName</span>());<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(person5.<span class="hljs-title function_">getFriends</span>());<br></code></pre></td></tr></table></figure>
+
+<p>通过上面这段代码，我们可以看到 person5 是通过寄生式继承生成的实例，它不仅仅有 getName 的方法，而且可以看到它最后也拥有了 getFriends 的方法，结果如下图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js11.png" srcset="/img/totoro.gif" lazyload></p>
+<p>从最后的输出结果中可以看到，person5 通过 clone 的方法，增加了 getFriends 的方法，从而使 person5 这个普通对象在继承过程中又增加了一个方法，这样的继承方式就是寄生式继承。但是存在弊端两次调用父类的构造函数造成浪费，寄生组合继承可以解决这个问题。</p>
+<h4 id="第六种：寄生组合式继承"><a href="#第六种：寄生组合式继承" class="headerlink" title="第六种：寄生组合式继承"></a>第六种：寄生组合式继承</h4><p>结合第四种中提及的继承方式，解决普通对象的继承问题的 Object.create 方法，在前面这几种继承方式的优缺点基础上进行改造，得出了寄生组合式的继承方式，这也是所有继承方式里面相对最优的继承方式，代码如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">clone</span> (parent, child) &#123;<br>  <span class="hljs-comment">// 这里改用 Object.create 就可以减少组合继承中多进行一次构造的过程</span><br>  child.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(parent.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);<br>  child.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span> = child;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent6</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-string">&#x27;parent6&#x27;</span>;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">play</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>&#125;<br> <span class="hljs-title class_">Parent6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getName</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">Child6</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-title class_">Parent6</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">friends</span> = <span class="hljs-string">&#x27;child5&#x27;</span>;<br>&#125;<br><br><span class="hljs-title function_">clone</span>(<span class="hljs-title class_">Parent6</span>, <span class="hljs-title class_">Child6</span>);<br><br><span class="hljs-title class_">Child6</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">getFriends</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">friends</span>;<br>&#125;<br><br><span class="hljs-keyword">let</span> person6 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Child6</span>();<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(person6);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(person6.<span class="hljs-title function_">getName</span>());<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(person6.<span class="hljs-title function_">getFriends</span>());<br></code></pre></td></tr></table></figure>
+
+<p>通过这段代码可以看出来，这种寄生组合式继承方式，基本可以解决前几种继承方式的缺点，较好地实现了继承想要的结果，同时也减少了构造次数，减少了性能的开销，我们来看一下上面这一段代码的执行结果。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js14.png" srcset="/img/totoro.gif" lazyload></p>
+<p>可以看到 person6 打印出来的结果，属性都得到了继承，方法也没问题，可以输出预期的结果。</p>
+<p>综上，六种继承方式中寄生组合式继承是最优的继承方式。另外，ES6 还提供了继承的关键字 extends，再看下 extends 的底层实现继承的逻辑。</p>
+<h3 id="ES6-的-extends-关键字实现逻辑"><a href="#ES6-的-extends-关键字实现逻辑" class="headerlink" title="ES6 的 extends 关键字实现逻辑"></a>ES6 的 extends 关键字实现逻辑</h3><p>可以利用 ES6 里的 extends 的语法糖，使用关键词很容易直接实现 JavaScript 的继承，</p>
+<p>先看下用利用 extends 如何直接实现继承，代码如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> </span>&#123;<br>  constructor(name) &#123;<br>    <span class="hljs-keyword">this</span>.name = name<br>  &#125;<br>  <span class="hljs-comment">// 原型方法</span><br>  <span class="hljs-comment">// 即 Person.prototype.getName = function() &#123; &#125;</span><br>  <span class="hljs-comment">// 下面可以简写为 getName() &#123;...&#125;</span><br>  getName = function () &#123;<br>    console.log(&#x27;<span class="hljs-type">Person</span>:&#x27;, <span class="hljs-keyword">this</span>.name)<br>  &#125;<br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Gamer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Person</span> </span>&#123;<br>  constructor(name, age) &#123;<br>    <span class="hljs-comment">// 子类中存在构造函数，则需要在使用“this”之前首先调用 super()。</span><br>    <span class="hljs-keyword">super</span>(name)<br>    <span class="hljs-keyword">this</span>.age = age<br>  &#125;<br>&#125;<br>const asuna = <span class="hljs-keyword">new</span> <span class="hljs-type">Gamer</span>(&#x27;<span class="hljs-type">Asuna</span>&#x27;, <span class="hljs-number">20</span>)<br>asuna.getName() <span class="hljs-comment">// 成功访问到父类的方法</span><br></code></pre></td></tr></table></figure>
+
+<p>由于浏览器的兼容性问题，如果遇到不支持 ES6 的浏览器，就得利用 babel 编译工具，将 ES6 的代码编译成 ES5，让一些不支持新语法的浏览器也能运行。</p>
+<p>那么最后 extends 编译成了什么样子呢？看一下转译之后的代码片段。</p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs qml"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_possibleConstructorReturn</span> (<span class="hljs-params">self, call</span>) </span>&#123; <br>		<span class="hljs-comment">// ...</span><br>		<span class="hljs-keyword">return</span> call &amp;&amp; (<span class="hljs-keyword">typeof</span> call === <span class="hljs-string">&#x27;object&#x27;</span> || <span class="hljs-keyword">typeof</span> call === <span class="hljs-string">&#x27;function&#x27;</span>) ? <span class="hljs-attribute">call</span> : self; <br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_inherits</span> (<span class="hljs-params">subClass, superClass</span>) </span>&#123; <br>    <span class="hljs-comment">// 这里可以看到</span><br>	subClass.prototype = <span class="hljs-built_in">Object</span>.create(superClass &amp;&amp; superClass.prototype, &#123; <br>		<span class="hljs-attribute">constructor</span>: &#123; <br>			<span class="hljs-attribute">value</span>: subClass, <br>			<span class="hljs-attribute">enumerable</span>: <span class="hljs-literal">false</span>, <br>			<span class="hljs-attribute">writable</span>: <span class="hljs-literal">true</span>, <br>			<span class="hljs-attribute">configurable</span>: <span class="hljs-literal">true</span> <br>		&#125; <br>	&#125;); <br>	<span class="hljs-keyword">if</span> (superClass) <span class="hljs-built_in">Object</span>.setPrototypeOf ? <span class="hljs-built_in">Object</span>.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; <br>&#125;<br><br><span class="hljs-keyword">var</span> Parent = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent</span> (<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-comment">// 验证是否是 Parent 构造出来的 this</span><br>	_classCallCheck(<span class="hljs-keyword">this</span>, Parent);<br>&#125;;<br><span class="hljs-keyword">var</span> Child = (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">_Parent</span>) </span>&#123;<br>	_inherits(Child, _Parent);<br>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Child</span> (<span class="hljs-params"></span>) </span>&#123;<br>		_classCallCheck(<span class="hljs-keyword">this</span>, Child);<br>		<span class="hljs-keyword">return</span> _possibleConstructorReturn(<span class="hljs-keyword">this</span>, (Child.__proto__ || <span class="hljs-built_in">Object</span>.getPrototypeOf(Child)).apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>));<br>&#125;<br>	<span class="hljs-keyword">return</span> Child;<br>&#125;(Parent));<br></code></pre></td></tr></table></figure>
+
+<p>从上面编译完成的源码中可以看到，它采用的也是寄生组合继承方式，因此也证明了这种方式是较优的解决继承的方式。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p> JavaScript 的继承方式：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/prime234/Picture-PicGo/images/js15_LI.jpg" srcset="/img/totoro.gif" lazyload></p>
+<p>通过 Object.create 来划分不同的继承方式，最后的寄生式组合继承方式是通过组合继承改造之后的最优继承方式，而 extends 的语法糖和寄生组合继承的方式基本类似。</p>
+<p>综上，我们可以看到不同的继承方式有不同的优缺点，选择最适合当前场景的继承方式，需要深入了解各种方式的优缺点。</p>
+<p>参考：</p>
+<p><a href="https://www.liaoxuefeng.com/wiki/1022910821149312/1023022126220448" target="_blank" rel="noopener">廖雪峰JavaScript教程</a></p>
+<p><a href="https://pan.baidu.com/s/1UjMmvMmbo6eU0-inVKecbA" target="_blank" rel="noopener">红宝书JavaScript高级程序设计百度网盘链接：https://pan.baidu.com/s/1UjMmvMmbo6eU0-inVKecbA<br>提取码：pru8 </a></p>
+<p><a href="https://www.w3cschool.cn/javascript/" target="_blank" rel="noopener">W3Cschool  JavaScript教程</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%89%8D%E7%AB%AF/" class="print-no-link">#前端</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JS6种继承方式</div>
+      <div>https://www.prime.org.cn/2021/03/26/JS6种继承方式/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>emroy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 26, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/03/26/JS%E7%BB%A7%E6%89%BF%E8%BF%9B%E9%98%B6/" title="JS继承进阶">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JS继承进阶</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/09/Hadoop%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" title="Hadoop基本操作">
+                        <span class="hidden-mobile">Hadoop基本操作</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":175,"height":200},"mobile":{"show":true},"log":false});</script></body>
+</html>

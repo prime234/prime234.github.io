@@ -1,0 +1,701 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="emroy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="git基础 创建新仓库创建新文件夹，打开，执行git init以创建新的git仓库。  检出仓库执行如下命令以创建一个本地仓库的克隆版本：git clone &#x2F;path&#x2F;to&#x2F;repository如果是远端服务器上的仓库，命令是这个样子：git clone username@host:&#x2F;path&#x2F;to&#x2F;repository  工作流本地仓库由 git 维护的三棵“树”组成。第一个是 【工作目录】，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git相关总结">
+<meta property="og:url" content="https://www.prime.org.cn/2023/01/30/git%E6%80%BB%E7%BB%93-%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="EMROY&#39;S BLOG">
+<meta property="og:description" content="git基础 创建新仓库创建新文件夹，打开，执行git init以创建新的git仓库。  检出仓库执行如下命令以创建一个本地仓库的克隆版本：git clone &#x2F;path&#x2F;to&#x2F;repository如果是远端服务器上的仓库，命令是这个样子：git clone username@host:&#x2F;path&#x2F;to&#x2F;repository  工作流本地仓库由 git 维护的三棵“树”组成。第一个是 【工作目录】，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-01-30T08:07:17.000Z">
+<meta property="article:modified_time" content="2024-03-20T10:44:15.000Z">
+<meta property="article:author" content="emroy">
+<meta property="article:tag" content="要折腾">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>git相关总结 - EMROY&#39;S BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.prime.org.cn","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/totoro.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Emroy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="git相关总结"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-30 16:07" pubdate>
+          January 30, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">git相关总结</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="git基础"><a href="#git基础" class="headerlink" title="git基础"></a>git基础</h1><ul>
+<li><p><strong>创建新仓库</strong><br>创建新文件夹，打开，执行<code>git init</code>以创建新的git仓库。</p>
+</li>
+<li><p><strong>检出仓库</strong><br>执行如下命令以创建一个本地仓库的克隆版本：<br><code>git clone /path/to/repository</code><br>如果是远端服务器上的仓库，命令是这个样子：<br><code>git clone username@host:/path/to/repository</code></p>
+</li>
+<li><p><strong>工作流</strong><br>本地仓库由 git 维护的三棵“树”组成。第一个是 【工作目录】，它持有实际文件；第二个是 【暂存区（Index）】，它像个缓存区域，临时保存改动；最后是【HEAD】，它指向最后一次提交的结果。</p>
+</li>
+<li><p><strong>添加和提交</strong><br>可以提出更改（把它们添加到暂存区），使用如下命令：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">git <span class="hljs-built_in">add</span> &lt;filename&gt;<br>git <span class="hljs-built_in">add</span> . #添加文件到暂存区<br></code></pre></td></tr></table></figure>
+<p>这是 git 基本工作流程的第一步；使用如下命令以实际提交改动，暂存区内容添加到仓库：<br><code>git commit -m &quot;代码提交信息&quot;</code><br>现在，所作改动已经提交到了 HEAD，但是还没到远端仓库。</p>
+</li>
+<li><p><strong>推送改动</strong><br>改动现在已经在本地仓库的 HEAD 中了。执行如下命令以将这些改动提交到远端仓库：<br><code>git push origin master</code><br>可以把 master 换成想要推送的任何分支。<br>如果还没有克隆现有仓库，并欲将仓库连接到某个远程服务器，可以使用如下命令添加：<br><code>git remote add origin &lt;server&gt;</code><br>如此就能够将改动推送到所添加的服务器上去了。<br>【分支】 分支是用来将特性开发绝缘开来的。在创建仓库的时候，master 是“默认的”分支。在其他分支上进行开发，完成后再将它们合并到主分支上。<br>创建一个叫做“feature_x”的分支，并切换过去：<br><code>git checkout -b feature_x</code><br>切换回主分支：<br><code>git checkout master</code><br>再把新建的分支删掉：<br><code>git branch -d feature_x</code><br>除非你将分支推送到远端仓库，不然该分支就是 不为他人所见的：<br><code>git push origin &lt;branch&gt;</code></p>
+</li>
+<li><p><strong>更新与合并</strong><br>要更新你的本地仓库至最新改动，执行：<br><code>git pull</code><br>以在工作目录中 获取（fetch） 并 合并（merge） 远端的改动。 要合并其他分支到你的当前分支（例如 master），执行： <code>git merge &lt;branch&gt;</code> 在这两种情况下，git 都会尝试去自动合并改动。但可能并非每次都成功，并可能出现冲突（conflicts）。 这时候就需要修改这些文件来手动合并这些冲突（conflicts）。改完之后，需要执行如下命令以将它们标记为合并成功： <code>git add &lt;filename&gt; </code>在合并改动之前，可以使用如下命令预览差异：<code>git diff &lt;source_branch&gt; &lt;target_branch&gt;</code></p>
+</li>
+<li><p><strong>标签</strong><br>为软件发布创建标签是推荐的。这个概念早已存在，在 SVN 中也有。你可以执行如下命令创建一个叫做 1.0.0 的标签：<br><code>git tag 1.0.0 1b2e1d63ff </code><br>1b2e1d63ff 是你想要标记的提交 ID 的前 10 位字符。可以使用下列命令获取提交 ID：<br><code>git log</code> 也可以使用少一点的提交 ID 前几位，只要它的指向具有唯一性。</p>
+</li>
+<li><p><strong>log</strong><br>如果想了解本地仓库的历史记录，最简单的命令就是使用:<br><code>git log</code><br>可以添加一些参数来修改他的输出，从而得到想要的结果。 只看某一个人的提交记录:<br><code>git log --author=bob</code><br>一个压缩后的每一条提交记录只占一行的输出:<br><code>git log --pretty=oneline</code><br>或者想通过 ASCII 艺术的树形结构来展示所有的分支, 每个分支都标示了他的名字和标签:<br><code>git log --graph --oneline --decorate --all</code><br>看看哪些文件改变了:<br><code>git log --name-status</code><br>这些只是可以使用的参数中很小的一部分。更多的信息，参考：<br><code>git log --help</code><br>替换本地改动 假如你操作失误（当然，这最好永远不要发生），你可以使用如下命令替换掉本地改动：<br><code>git checkout -- &lt;filename&gt;</code><br>此命令会使用 HEAD 中的最新内容替换掉工作目录中的文件。已添加到暂存区的改动以及新文件都不会受到影响。<br>假如想丢弃在本地的所有改动与提交，可以到服务器上获取最新的版本历史，并将本地主分支指向它：</p>
+  <figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs maxima">git fetch <span class="hljs-built_in">origin</span><br>git <span class="hljs-built_in">reset</span> --hard <span class="hljs-built_in">origin</span>/master<br></code></pre></td></tr></table></figure>
+<p>  实用小贴士 内建的图形化 git：<code>gitk</code><br>  彩色的 git 输出：<br>  <code>git config color.ui true</code><br>显示历史记录时，每个提交的信息只显示一行：<br><code>git config format.pretty oneline</code><br>交互式添加文件到暂存区：<br><code>git add -i</code></p>
+</li>
+<li><p><strong>展示暂存区和最近版本的不同</strong><br>输出工作区和暂存区的 different (不同)。<br><code>git diff</code></p>
+</li>
+<li><p><strong>git保存当前状态</strong><br>untracked文件：新建的文件<br><code>git stash -u</code></p>
+</li>
+<li><p><strong>git展示所有stashes</strong><br><code>git stash list</code></p>
+</li>
+<li><p><strong>回到某个stash的状态</strong><br><code>git stash apply &lt;stash@&#123;n&#125;&gt;</code></p>
+</li>
+<li><p><strong>回到最后一个stash的状态，并删除这个stash</strong><br><code>git stash pop</code></p>
+</li>
+<li><p><strong>同步远程仓库的代码，并且覆盖本地的改变</strong><br>慎用，会把本地commit提交的没有推送到远程的代码会覆盖掉</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">git fetch origin &amp;&amp; git reset --hard origin/<span class="hljs-keyword">master</span> <span class="hljs-title">&amp;&amp; git</span> clean -f -d<br></code></pre></td></tr></table></figure></li>
+<li><p><strong>删除已经合并到 master 的分支</strong><br>删除已经合并到 master 的分支</p>
+  <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">git branch --merged <span class="hljs-keyword">master</span> <span class="hljs-title">| grep</span> -v &#x27;^\*\|  <span class="hljs-literal">master</span>&#x27; | xargs -n <span class="hljs-number">1</span> git branch -d<br></code></pre></td></tr></table></figure></li>
+<li><p><strong>查看标签</strong><br><code>git tag</code></p>
+</li>
+<li><p><strong>展示当前分支的最近的 tag</strong><br><code>git describe --tags --abbrev=0</code></p>
+</li>
+<li><p><strong>丢弃本地所有的修改，回到远程仓库的状态</strong></p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">git fetch origin &amp;&amp; git reset --hard origin/<span class="hljs-keyword">master</span> <span class="hljs-title">&amp;&amp; git</span> clean -f -d<br></code></pre></td></tr></table></figure></li>
+<li><p><strong>展示本地分支关联远程仓库的情况 &amp;&amp; 关联远程分支</strong><br>展示本地分支关联远程仓库的情况<br><code>git branch -vv</code><br>关联远程分支<br>关联之后，git branch -vv 就可以展示关联的远程分支名了，同时推送到远程仓库直接：git push，不需要指定远程仓库了。<br><code>git branch -u origin/mybranch</code><br>或者在 push 时加上 -u 参数<br><code>git push origin/mybranch -u</code></p>
+</li>
+<li><p><strong>Git Checkout 远程分支</strong><br>当你在本地创建一个分支时，它只存在于本地，直到它被推送到 GitHub 并成为远程分支，如下所示：</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs smali"><span class="hljs-comment"># 创建一个新的分支</span><br>git branch<span class="hljs-built_in"> new-branch</span><br><span class="hljs-built_in"></span><span class="hljs-comment"># 切换到新的分支</span><br>git checkout<span class="hljs-built_in"> new-branch</span><br><span class="hljs-built_in"></span><span class="hljs-comment"># 创建一个更新</span><br>touch new-file.js<br><span class="hljs-comment"># 提交更新</span><br>git<span class="hljs-built_in"> add </span>.<br>git commit -m <span class="hljs-string">&quot;add new file&quot;</span><br><span class="hljs-comment"># 推送到新的分支</span><br>git push --set-upstream origin new-branch<br></code></pre></td></tr></table></figure>
+<p>如何 Git Checkout 远程分支<br>假设另一个开发人员创建了一个远程分支，而你想要拉取该分支，可按照以下步骤：</p>
+<ol>
+<li>获取所有远程分支<br><code>git fetch origin</code><br>这将从仓库中获取所有远程分支。origin 是要定位的远程名称。所以如果你有一个上游远程名称 upstream，可以调用 git fetch upstream。</li>
+<li>列出所有可以 checkout 的分支<br>运行以下命令列出所有可以 checkout 的分支：<br><code>git branch -a</code><br>这条命令的输出是所有可以 checkout 的分支。远程分支的前缀是 remotes&#x2F;origin。</li>
+<li>从远程分支拉取更改<br>请注意，你不能直接在远程分支上进行更改。因此，你需要该分支的副本。假设你想复制远程分支 fix-failing-tests，运行以下命令：<br><code>git checkout -b fix-failing-tests origin/fix-failing-tests</code><br>将执行：<br>创建了一个名为 fix-failing-tests 的新分支<br>checkout 那个分支<br>将更改从 origin&#x2F;fix-failing-tests 拉到该分支<br>现在你有了那个远程分支的副本。此外，可以将提交推送到该远程分支。<br>例如，像这样推送一个新的提交：<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gradle">touch <span class="hljs-keyword">new</span>-<span class="hljs-keyword">file</span>.js<br>git add .<br>git commit -m <span class="hljs-string">&quot;add new file&quot;</span><br>git <span class="hljs-keyword">push</span><br></code></pre></td></tr></table></figure>
+这会将已提交的更改推送到 origin&#x2F;fix-failing-tests。<br>例如 <code>git push origin fix-failing-tests</code>不必指定我们将更改推送到何处），那是因为 git 会自动设置本地分支来跟踪远程分支。<br>删除分支<code>git branch -d (branchname)</code><br>合并分支<code>git merge branchname</code></li>
+</ol>
+</li>
+<li><p><strong>pycharm Git版本回退 自由切换</strong><br>一定需要注意的是，在切换代码版本前，一定要将当前的状态commit下来，然后再进行下面的切换操作。否则，当前修改的代码就有可能丢失了。<br>show git log 查看commit版本 版本11:40-&gt;版本10:33<br>选中版本10:33 Reset Cuurent Branch to Here 选择Hard模式即可回退 若又想回退版本11:40 要先从log记录找到版本对应commit ID,选择Reset Head 任选Hard模式就又回到代码版本了。</p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/git/" class="category-chain-item">git</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%A6%81%E6%8A%98%E8%85%BE/" class="print-no-link">#要折腾</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>git相关总结</div>
+      <div>https://www.prime.org.cn/2023/01/30/git总结-技巧/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>emroy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 30, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/23/Python-Vue-HDFS-File-Upload/" title="HDFS File Upload">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HDFS File Upload</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/13/Shell/" title="Shell">
+                        <span class="hidden-mobile">Shell</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":175,"height":200},"mobile":{"show":true},"log":false});</script></body>
+</html>
