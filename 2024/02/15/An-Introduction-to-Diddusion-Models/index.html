@@ -1,0 +1,716 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="emroy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="扩散模型什么是扩散模型生成模型，从纯噪声开始逐渐去躁数据。 标志从纯噪音开始进行迭代细化，这种缓慢的渐进去躁是扩散模型的标志，一开始生成的是随机噪声，但经过若干步骤后，噪声会逐渐细化，直到出现输出图像。在每一步中，模型都会估算如何将当前输入图像转化为完全去噪的版本，最终模型输出和当前样本的某种组合 迭代特性以迭代细化方式训练模型，并通过进行多次预测并每次移动少量来对其进行采样，直到获得类似的去噪输">
+<meta property="og:type" content="article">
+<meta property="og:title" content="An Introduction to Diddusion Models">
+<meta property="og:url" content="https://www.prime.org.cn/2024/02/15/An-Introduction-to-Diddusion-Models/index.html">
+<meta property="og:site_name" content="EMROY&#39;S BLOG">
+<meta property="og:description" content="扩散模型什么是扩散模型生成模型，从纯噪声开始逐渐去躁数据。 标志从纯噪音开始进行迭代细化，这种缓慢的渐进去躁是扩散模型的标志，一开始生成的是随机噪声，但经过若干步骤后，噪声会逐渐细化，直到出现输出图像。在每一步中，模型都会估算如何将当前输入图像转化为完全去噪的版本，最终模型输出和当前样本的某种组合 迭代特性以迭代细化方式训练模型，并通过进行多次预测并每次移动少量来对其进行采样，直到获得类似的去噪输">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/HlQJSx9Dmeo7ZYC.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/tnCbDFNTeUMQ9zA.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/UXoye84C1PDVYth.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/itbloDE2KSO79qk.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/VNfsdMqgBacS523.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/TwJ84UqKzxMkdOb.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/H39G1lIoLMOcg7R.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/HlQJSx9Dmeo7ZYC.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/BHtsVva1dTGFc8b.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/mUpoydCZw1i4e5W.png">
+<meta property="og:image" content="https://s2.loli.net/2024/04/15/lchCbQOwtoJL9IT.png">
+<meta property="article:published_time" content="2024-02-14T18:47:42.000Z">
+<meta property="article:modified_time" content="2024-04-15T04:15:07.582Z">
+<meta property="article:author" content="emroy">
+<meta property="article:tag" content="要折腾">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/04/15/HlQJSx9Dmeo7ZYC.png">
+  
+  
+  
+  <title>An Introduction to Diddusion Models - EMROY&#39;S BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.prime.org.cn","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/totoro.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Emroy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="An Introduction to Diddusion Models"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-15 02:47" pubdate>
+          February 15, 2024 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">An Introduction to Diddusion Models</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="扩散模型"><a href="#扩散模型" class="headerlink" title="扩散模型"></a>扩散模型</h1><h2 id="什么是扩散模型"><a href="#什么是扩散模型" class="headerlink" title="什么是扩散模型"></a>什么是扩散模型</h2><p>生成模型，从纯噪声开始逐渐去躁数据。</p>
+<h3 id="标志"><a href="#标志" class="headerlink" title="标志"></a>标志</h3><p>从纯噪音开始进行迭代细化，这种缓慢的渐进去躁是扩散模型的标志，一开始生成的是随机噪声，但经过若干步骤后，噪声会逐渐细化，直到出现输出图像。在每一步中，模型都会估算如何将当前输入图像转化为完全去噪的版本，最终模型输出和当前样本的某种组合</p>
+<h3 id="迭代特性"><a href="#迭代特性" class="headerlink" title="迭代特性"></a>迭代特性</h3><p>以迭代细化方式训练模型，并通过进行多次预测并每次移动少量来对其进行采样，直到获得类似的去噪输出。</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs elm">!pip install -q -<span class="hljs-type">U</span> einops datasets matplotlib tqdm<br><br><span class="hljs-keyword">import</span> math<br><span class="hljs-title">from</span> inspect <span class="hljs-keyword">import</span> isfunction<br><span class="hljs-title">from</span> functools <span class="hljs-keyword">import</span> partial<br><br>%matplotlib inline<br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><span class="hljs-title">from</span> tqdm.auto <span class="hljs-keyword">import</span> tqdm<br><span class="hljs-title">from</span> einops <span class="hljs-keyword">import</span> rearrange, reduce<br><span class="hljs-title">from</span> einops.layers.torch <span class="hljs-keyword">import</span> Rearrange<br><br><span class="hljs-keyword">import</span> torch<br><span class="hljs-title">from</span> torch <span class="hljs-keyword">import</span> nn, einsum<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br></code></pre></td></tr></table></figure>
+<h2 id="U-Net模型代码"><a href="#U-Net模型代码" class="headerlink" title="U-Net模型代码"></a>U-Net模型代码</h2><p>典型的Encoder-Decoder结构,加入了时序建模的时间embedding和条件对比机制。利用ResNet块提取特征,自注意力层进行全局交互,上下采样调整分辨率。</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><code class="hljs nix">class Unet(nn.Module):<br>    def __init__(<br>        self,<br>        dim, <span class="hljs-comment"># 控制网络整体通道数</span><br>        <span class="hljs-attr">init_dim=None,</span> <span class="hljs-comment"># 第一层卷积层的输出通道数</span><br>        <span class="hljs-attr">out_dim=None,</span> <span class="hljs-comment"># 最后输出通道数</span><br>        <span class="hljs-attr">dim_mults=(1,</span> <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>), <span class="hljs-comment"># 每个下采样块中通道数相对上一层的增大倍率</span><br>        <span class="hljs-attr">channels=3,</span>  <span class="hljs-comment"># 输入图像的通道数</span><br>        <span class="hljs-attr">self_condition=False,</span>  <span class="hljs-comment"># 是否使用条件对比</span><br>        <span class="hljs-attr">resnet_block_groups=4,</span>  <span class="hljs-comment"># ResNet块中的group数</span><br>    ):   <br>        <span class="hljs-comment"># 初始化module</span><br>        super().__init__()<br><br>        <span class="hljs-comment"># 定义参数</span><br>        self.<span class="hljs-attr">channels</span> = channels<br>        self.<span class="hljs-attr">self_condition</span> = self_condition<br>        <span class="hljs-comment"># 输入通道数，包含原图及条件图</span><br>        <span class="hljs-attr">input_channels</span> = channels * (<span class="hljs-number">2</span> <span class="hljs-keyword">if</span> self_condition <span class="hljs-keyword">else</span> <span class="hljs-number">1</span>)<br>        <span class="hljs-comment"># 第一层卷积层输出通道数</span><br>        <span class="hljs-attr">init_dim</span> = default(init_dim, dim)<br>        <br>        <span class="hljs-comment"># 第一层卷积,转换通道数</span><br>        self.<span class="hljs-attr">init_conv</span> = nn.Conv2d(input_channels, init_dim, <span class="hljs-number">1</span>, <span class="hljs-attr">padding=0)</span><br>        <br>        <span class="hljs-comment"># 计算每个下采样层的通道数</span><br>        <span class="hljs-attr">dims</span> = [init_dim, *<span class="hljs-built_in">map</span>(lambda m: dim * m, dim_mults)]<br>        <br>        <span class="hljs-comment"># 每个采样层的输入输出通道数</span><br>        <span class="hljs-attr">in_out</span> = list(zip(dims[:-<span class="hljs-number">1</span>], dims[<span class="hljs-number">1</span>:])) <br><br>        <span class="hljs-comment"># ResNet块</span><br>        <span class="hljs-attr">block_klass</span> = partial(ResnetBlock, <span class="hljs-attr">groups=resnet_block_groups)</span>  <br>        <br>        <span class="hljs-comment"># 时间Embedding层</span><br>        <span class="hljs-attr">time_dim</span> = dim * <span class="hljs-number">4</span><br>        self.<span class="hljs-attr">time_mlp</span> = nn.Sequential(<br>            SinusoidalPositionEmbeddings(dim),<br>            nn.Linear(dim, time_dim),<br>            nn.GELU(),<br>            nn.Linear(time_dim, time_dim),<br>        )<br><br>        <span class="hljs-comment"># 下采样层</span><br>        self.<span class="hljs-attr">downs</span> = nn.ModuleList([])<br>        for ind, (dim_in, dim_out) <span class="hljs-keyword">in</span> enumerate(in_out):<br>            <span class="hljs-attr">is_last</span> = ind &gt;= (num_resolutions - <span class="hljs-number">1</span>)<br>            <br>            <span class="hljs-comment"># ResNet,夜耳注意力层,下采样层</span><br>            self.downs.append(<br>                nn.ModuleList([<br>                    block_klass(dim_in, dim_in, <span class="hljs-attr">time_emb_dim=time_dim),</span> <br>                    block_klass(dim_in, dim_in, <span class="hljs-attr">time_emb_dim=time_dim),</span><br>                    Residual(PreNorm(dim_in, LinearAttention(dim_in))),  <br>                    Downsample(dim_in, dim_out) <span class="hljs-keyword">if</span> not is_last <span class="hljs-keyword">else</span> <br>                    nn.Conv2d(dim_in, dim_out, <span class="hljs-number">3</span>, <span class="hljs-attr">padding=1)</span><br>                ])<br>            )<br><br>        <span class="hljs-comment"># 中间层</span><br>        <span class="hljs-attr">mid_dim</span> = dims[-<span class="hljs-number">1</span>]<br>        self.<span class="hljs-attr">mid_block1</span> = block_klass(mid_dim, mid_dim, <span class="hljs-attr">time_emb_dim=time_dim)</span><br>        self.<span class="hljs-attr">mid_attn</span> = Residual(PreNorm(mid_dim, Attention(mid_dim)))<br>        self.<span class="hljs-attr">mid_block2</span> = block_klass(mid_dim, mid_dim, <span class="hljs-attr">time_emb_dim=time_dim)</span><br>        <br>        <span class="hljs-comment"># 上采样层</span><br>        for ind, (dim_in, dim_out) <span class="hljs-keyword">in</span> enumerate(reversed(in_out)):<br>            <span class="hljs-attr">is_last</span> = <span class="hljs-attr">ind</span> == (len(in_out) - <span class="hljs-number">1</span>)<br>            <br>            self.ups.append(<br>                nn.ModuleList([<br>                    block_klass(dim_out + dim_in, dim_out, <span class="hljs-attr">time_emb_dim=time_dim),</span><br>                    block_klass(dim_out + dim_in, dim_out, <span class="hljs-attr">time_emb_dim=time_dim),</span><br>                    Residual(PreNorm(dim_out, LinearAttention(dim_out))),<br>                    Upsample(dim_out, dim_in) <span class="hljs-keyword">if</span> not is_last <span class="hljs-keyword">else</span> <br>                    nn.Conv2d(dim_out, dim_in, <span class="hljs-number">3</span>, <span class="hljs-attr">padding=1)</span><br>                ])<br>            )<br>        <br>        <span class="hljs-comment"># 输出通道数</span><br>        self.<span class="hljs-attr">out_dim</span> = default(out_dim, channels)<br>        <br>        <span class="hljs-comment"># 最后一个ResNet块</span><br>        self.<span class="hljs-attr">final_res_block</span> = block_klass(dim * <span class="hljs-number">2</span>, dim, <span class="hljs-attr">time_emb_dim=time_dim)</span><br>        <br>        <span class="hljs-comment"># 输出卷积</span><br>        self.<span class="hljs-attr">final_conv</span> = nn.Conv2d(dim, self.out_dim, <span class="hljs-number">1</span>)<br><br>    def forward(self, x, time, <span class="hljs-attr">x_self_cond=None):</span><br>            <br>        <span class="hljs-comment"># 条件输入处理</span><br>        <span class="hljs-keyword">if</span> self.self_condition:<br>            <span class="hljs-attr">x_self_cond</span> = default(x_self_cond, lambda: torch.zeros_like(x))<br>            <span class="hljs-attr">x</span> = torch.cat((x_self_cond, x), <span class="hljs-attr">dim=1)</span><br>        <br>        <span class="hljs-comment"># 初始化卷积</span><br>        <span class="hljs-attr">x</span> = self.init_conv(x)<br>        <br>        <span class="hljs-comment"># 保存输入,用于最后注意力</span><br>        <span class="hljs-attr">r</span> = x.clone()<br>        <br>        <span class="hljs-comment"># 时间Embedding</span><br>        <span class="hljs-attr">t</span> = self.time_mlp(time) <br><br>        <span class="hljs-comment"># 存储采样特征</span><br>        <span class="hljs-attr">h</span> = []<br>        <br>        <span class="hljs-comment"># 下采样</span><br>        for block1, block2, attn, downsample <span class="hljs-keyword">in</span> self.downs:<br>            <span class="hljs-attr">x</span> = block1(x, t)<br>            h.append(x)<br>            <span class="hljs-attr">x</span> = block2(x, t)<br>            <span class="hljs-attr">x</span> = attn(x)<br>            h.append(x)<br>            <span class="hljs-attr">x</span> = downsample(x)<br><br>        <span class="hljs-comment"># 中间层</span><br>        <span class="hljs-attr">x</span> = self.mid_block1(x, t)<br>        <span class="hljs-attr">x</span> = self.mid_attn(x)<br>        <span class="hljs-attr">x</span> = self.mid_block2(x, t)<br><br>        <span class="hljs-comment"># 上采样</span><br>        for block1, block2, attn, upsample <span class="hljs-keyword">in</span> self.ups:<br>            <span class="hljs-attr">x</span> = torch.cat((x, h.pop()), <span class="hljs-attr">dim=1)</span> <br>            <span class="hljs-attr">x</span> = block1(x, t)<br>            <span class="hljs-attr">x</span> = torch.cat((x, h.pop()), <span class="hljs-attr">dim=1)</span><br>            <span class="hljs-attr">x</span> = block2(x, t)<br>            <span class="hljs-attr">x</span> = attn(x)<br>            <span class="hljs-attr">x</span> = upsample(x)<br><br>        <span class="hljs-comment"># 和输入特征拼接</span><br>        <span class="hljs-attr">x</span> = torch.cat((x, r), <span class="hljs-attr">dim=1)</span> <br>        <span class="hljs-attr">x</span> = self.final_res_block(x, t)<br>        <br>        <span class="hljs-comment"># 输出卷积</span><br>        return self.final_conv(x)<br></code></pre></td></tr></table></figure>
+<h2 id="定义模型-GPU计算"><a href="#定义模型-GPU计算" class="headerlink" title="定义模型 GPU计算"></a>定义模型 GPU计算</h2><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs nix">from torch.optim <span class="hljs-built_in">import</span> Adam<br><br><span class="hljs-attr">device</span> = <span class="hljs-string">"cuda"</span> <span class="hljs-keyword">if</span> torch.cuda.is_available() <span class="hljs-keyword">else</span> <span class="hljs-string">"cpu"</span><br><br><span class="hljs-attr">model</span> = Unet(<br>    <span class="hljs-attr">dim=image_size,</span><br>    <span class="hljs-attr">channels=channels,</span><br>    <span class="hljs-attr">dim_mults=(1,</span> <span class="hljs-number">2</span>, <span class="hljs-number">4</span>,)<br>)<br>model.to(device)<br><br><span class="hljs-attr">optimizer</span> = Adam(model.parameters(), <span class="hljs-attr">lr=1e-3)</span><br><br>from torchvision.utils <span class="hljs-built_in">import</span> save_image<br><br><span class="hljs-attr">epochs</span> = <span class="hljs-number">6</span><br><br>for epoch <span class="hljs-keyword">in</span> range(epochs):<br>    for step, batch <span class="hljs-keyword">in</span> enumerate(dataloader):<br>      optimizer.zero_grad()<br><br>      <span class="hljs-attr">batch_size</span> = batch[<span class="hljs-string">"pixel_values"</span>].shape[<span class="hljs-number">0</span>]<br>      <span class="hljs-attr">batch</span> = batch[<span class="hljs-string">"pixel_values"</span>].to(device)<br><br>      <span class="hljs-comment"># Algorithm 1 line 3: sample t uniformally for every example in the batch</span><br>      <span class="hljs-attr">t</span> = torch.randint(<span class="hljs-number">0</span>, timesteps, (batch_size,), <span class="hljs-attr">device=device).long()</span><br><br>      <span class="hljs-attr">loss</span> = p_losses(model, batch, t, <span class="hljs-attr">loss_type="huber")</span><br><br>      <span class="hljs-keyword">if</span> step % <span class="hljs-number">100</span> == <span class="hljs-number">0</span>:<br>        print(<span class="hljs-string">"Loss:"</span>, loss.item())<br><br>      loss.backward()<br>      optimizer.step()<br><br>      <span class="hljs-comment"># save generated images</span><br>      <span class="hljs-keyword">if</span> step != <span class="hljs-number">0</span> <span class="hljs-literal">and</span> step % <span class="hljs-attr">save_and_sample_every</span> == <span class="hljs-number">0</span>:<br>        <span class="hljs-attr">milestone</span> = step // save_and_sample_every<br>        <span class="hljs-attr">batches</span> = num_to_groups(<span class="hljs-number">4</span>, batch_size)<br>        <span class="hljs-attr">all_images_list</span> = list(<span class="hljs-built_in">map</span>(lambda n: sample(model, <span class="hljs-attr">batch_size=n,</span> <span class="hljs-attr">channels=channels),</span> batches))<br>        <span class="hljs-attr">all_images</span> = torch.cat(all_images_list, <span class="hljs-attr">dim=0)</span><br>        <span class="hljs-attr">all_images</span> = (all_images + <span class="hljs-number">1</span>) * <span class="hljs-number">0.5</span><br>        save_image(all_images, str(results_folder / f'sample-&#123;milestone&#125;.png'), <span class="hljs-attr">nrow</span> = <span class="hljs-number">6</span>)<br></code></pre></td></tr></table></figure>
+<p>输入模型中的图片经过几个由 ResNetLayer 构成的层，其中每层都使图片尺寸减半。之后在经过同样数量的层把图片升采样。其中还有对特征在相同位置的上、下采样层残差连接模块。模型一个关键特征既是，输出图片尺寸与输入图片相同.</p>
+<h2 id="生成的图像结果代码处理逻辑学习理解"><a href="#生成的图像结果代码处理逻辑学习理解" class="headerlink" title="生成的图像结果代码处理逻辑学习理解"></a>生成的图像结果代码处理逻辑学习理解</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><span class="hljs-keyword">from</span> matplotlib <span class="hljs-keyword">import</span> pyplot <span class="hljs-keyword">as</span> plt<br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">show_images</span><span class="hljs-params">(x)</span>:</span><br>    <span class="hljs-string">"""Given a batch of images x, make a grid and convert to PIL"""</span><br>    x = x * <span class="hljs-number">0.5</span> + <span class="hljs-number">0.5</span>  <span class="hljs-comment"># Map from (-1, 1) back to (0, 1) # 将图像的值从(-1, 1)映射回(0, 1)的范围内</span><br>    grid = torchvision.utils.make_grid(x) <span class="hljs-comment"># 使用torchvision.utils.make_grid将批量图像拼成网格</span><br>    grid_im = grid.detach().cpu().permute(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>).clip(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>) * <span class="hljs-number">255</span> <span class="hljs-comment"># 将tensor转换为CPU上的numpy数组,并转换为PIL Image格式</span><br>    grid_im = Image.fromarray(np.array(grid_im).astype(np.uint8)) <span class="hljs-comment">#</span><br>    <span class="hljs-keyword">return</span> grid_im<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">make_grid</span><span class="hljs-params">(images, size=<span class="hljs-number">64</span>)</span>:</span> <span class="hljs-comment"># 将一组PIL Image拼接成一行，将tensor表示的批量图像拼接成网格。这个函数通常用来显示训练过程中生成的图像结果。</span><br>    <span class="hljs-string">"""Given a list of PIL images, stack them together into a line for easy viewing"""</span><br>    output_im = Image.new(<span class="hljs-string">"RGB"</span>, (size * len(images), size))<br>    <span class="hljs-keyword">for</span> i, im <span class="hljs-keyword">in</span> enumerate(images):<br>        output_im.paste(im.resize((size, size)), (i * size, <span class="hljs-number">0</span>))<br>    <span class="hljs-keyword">return</span> output_im<br><span class="hljs-comment"># Mac users may need device = 'mps' (untested)</span><br>device = torch.device(<span class="hljs-string">"cuda"</span> <span class="hljs-keyword">if</span> torch.cuda.is_available() <span class="hljs-keyword">else</span> <span class="hljs-string">"cpu"</span>)<br></code></pre></td></tr></table></figure>
+<h2 id="相关参数"><a href="#相关参数" class="headerlink" title="相关参数"></a>相关参数</h2><p>在使用Diffusion生成图片时调整参数以获取更好效果,可以从以下几个方面调整:</p>
+<ol>
+<li><p>num_inference_steps: 推理步数,值越大生成的图片质量越高,但速度越慢。一般50-100是一个合理的范围。</p>
+</li>
+<li><p>guidance_scale: 指导尺度,控制文本prompt的作用力。值越大对prompt越忠实。7-15是一个合适的范围。</p>
+</li>
+<li><p>cfg_scale: CLIP模型作用力,可以增强生成图片的逼真度和识别能力。默认值是7,可以尝试增加到10左右。</p>
+</li>
+<li><p>Height/Width: 生成图片分辨率,越大则细节越丰富,但消耗越大。</p>
+</li>
+<li><p>Batch size: 一次生成的图片数量,对显卡影响很大,根据环境调整。</p>
+</li>
+</ol>
+<h2 id="优化模型超参数"><a href="#优化模型超参数" class="headerlink" title="优化模型超参数"></a>优化模型超参数</h2><p>计算FID是评估生成图片质量的常用定量指标,可以用来优化模型超参数。<br>通过以下方式计算生成图片的FID(Frechet Inception Distance)分数:</p>
+<ol>
+<li>导入必要的包:</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> diffusers <span class="hljs-keyword">import</span> FID<br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>加载预训练好的Inception v3模型来进行特征提取:</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">model = FID.load_inception_v3()<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>将生成的图片读取为PIL Image对象,构建一个images列表</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">images = []<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(num_images):<br>  img = Image.open(<span class="hljs-string">f"generated_<span class="hljs-subst">&#123;i&#125;</span>.png"</span>) <br>  images.append(img)<br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>计算images与真实图片集的FID score:</li>
+</ol>
+<pre><code class="python">real_imgs = load_real_images() <span class="comment"># 载入真实图片</span>
+fid = FID.calculate_fid(model, real_imgs, images)</code></pre>
+<p>较低的fid分数表示生成图片的分布更接近真实图片集。<br>或者直接使用diffusers库中的<code>FIDScore</code>评估器类进行计算。</p>
+<h2 id="Diffusers-的核心-API-三个主要部分"><a href="#Diffusers-的核心-API-三个主要部分" class="headerlink" title="Diffusers 的核心 API 三个主要部分:"></a>Diffusers 的核心 API 三个主要部分:</h2><ul>
+<li>管道: 从高层出发设计的多种类函数，旨在以易部署的方式，能够做到快速通过主流预训练好的扩散模型来生成样本。</li>
+<li>模型: 训练新的扩散模型时用到的主流网络架构，e.g. UNet.</li>
+<li>管理器 (or 调度器): 在 推理 中使用多种不同的技巧来从噪声中生成图像，同时也可以生成在 训练 中所需的带噪图像。</li>
+</ul>
+<p><img src="https://s2.loli.net/2024/04/15/HlQJSx9Dmeo7ZYC.png" srcset="/img/totoro.gif" lazyload alt="image-5.png"><br><img src="https://s2.loli.net/2024/04/15/tnCbDFNTeUMQ9zA.png" srcset="/img/totoro.gif" lazyload alt="image-6.png"></p>
+<p>beta_start和beta_end控制的是加噪过程的开始和结束的噪声水平。</p>
+<ul>
+<li>beta_start: 开始训练时添加的噪声量,值越小表示开始时添加的噪声越少。默认是0.0001。</li>
+<li>beta_end: 训练结束时添加的噪声量。默认是0.02。<br>它们的曲线意义如下:</li>
+<li>sqrt(bar{alpha}_t):表示随训练步长增加,去噪的程度,曲线越陡峭表示去噪越快。</li>
+<li>sqrt(1 - bar{alpha}_t):表示残余的噪声量,曲线越低表示最后的噪声越少。<br>如果beta_start设置得太大,去噪会从一开始就很快,对训练不利;如果beta_end太小,说明最后噪声去除不充分,质量下降。<br>beta_schedule设置噪声曲线的形状,cosine形状的去噪速度更好更稳定。</li>
+</ul>
+<p><img src="https://s2.loli.net/2024/04/15/UXoye84C1PDVYth.png" srcset="/img/totoro.gif" lazyload alt="image-7.png"><br><img src="https://s2.loli.net/2024/04/15/itbloDE2KSO79qk.png" srcset="/img/totoro.gif" lazyload alt="image-8.png"><br><img src="https://s2.loli.net/2024/04/15/VNfsdMqgBacS523.png" srcset="/img/totoro.gif" lazyload alt="image-9.png"></p>
+<p><img src="https://s2.loli.net/2024/04/15/TwJ84UqKzxMkdOb.png" srcset="/img/totoro.gif" lazyload alt="image-1.png"><br><img src="https://s2.loli.net/2024/04/15/H39G1lIoLMOcg7R.png" srcset="/img/totoro.gif" lazyload alt="image-4.png"><br><img src="https://s2.loli.net/2024/04/15/HlQJSx9Dmeo7ZYC.png" srcset="/img/totoro.gif" lazyload alt="image-5.png"><br><img src="https://s2.loli.net/2024/04/15/BHtsVva1dTGFc8b.png" srcset="/img/totoro.gif" lazyload alt="image-3.png"><br><img src="https://s2.loli.net/2024/04/15/mUpoydCZw1i4e5W.png" srcset="/img/totoro.gif" lazyload alt="image-2.png"><br><img src="https://s2.loli.net/2024/04/15/lchCbQOwtoJL9IT.png" srcset="/img/totoro.gif" lazyload alt="image.png"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/" class="category-chain-item">扩散模型</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%A6%81%E6%8A%98%E8%85%BE/" class="print-no-link">#要折腾</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>An Introduction to Diddusion Models</div>
+      <div>https://www.prime.org.cn/2024/02/15/An-Introduction-to-Diddusion-Models/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>emroy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 15, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/04/02/leetcode%E5%88%B7%E9%A2%98/" title="leetcode刷题笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">leetcode刷题笔记</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/23/Python-Vue-HDFS-File-Upload/" title="HDFS File Upload">
+                        <span class="hidden-mobile">HDFS File Upload</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":175,"height":200},"mobile":{"show":true},"log":false});</script></body>
+</html>
